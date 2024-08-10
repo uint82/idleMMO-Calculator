@@ -1,0 +1,51 @@
+{
+    "woodcutting": {
+      "name": "Woodcutting",
+      "items": [
+        { "name": "Oak Log", "minLevel": 1, "exp": 3, "STRexp": 1, "wait_length": 12 },
+        { "name": "Yew Log", "minLevel": 5, "exp": 5, "STRexp": 2, "wait_length": 15 },
+        { "name": "Spruce Log", "minLevel": 10, "exp": 10, "STRexp": 3, "wait_length": 23 },
+        { "name": "Birch Log", "minLevel": 15, "exp": 15, "STRexp": 5, "wait_length": 27 },
+        { "name": "Banyan Log", "minLevel": 25, "exp": 21, "STRexp": 7, "wait_length": 31.5 },
+        { "name": "Maple Log", "minLevel": 40, "exp": 27, "STRexp": 9, "wait_length": 36 },
+        { "name": "Willow Log", "minLevel": 60, "exp": 35, "STRexp": 11, "wait_length": 40 },
+        { "name": "Mahogany Log", "minLevel": 70, "exp": 40, "STRexp": 13, "wait_length": 44 },
+        { "name": "Mystical Log", "minLevel": 90, "exp": 55, "STRexp": 16, "wait_length": 55 }
+      ]
+    },
+
+    "Mining": {
+      "name": "Mining",
+      "items": [
+        { "name": "Coal Ore", "minLevel": 1, "exp": 3, "STRexp": 1, "DEFexp": 1, "wait_length": 12 },
+        { "name": "Tin Ore", "minLevel": 1, "exp": 3, "STRexp": 1, "DEFexp": 1, "wait_length": 12 },
+        { "name": "Copper Ore", "minLevel": 5, "exp": 5, "STRexp": 1, "DEFexp": 2, "wait_length": 15 },
+        { "name": "Iron Ore", "minLevel": 10, "exp": 10, "STRexp": 2, "DEFexp": 3, "wait_length": 23 },
+        { "name": "Lead Ore", "minLevel": 15, "exp": 15, "STRexp": 3, "DEFexp": 5, "wait_length": 27 },
+        { "name": "Steel Ore", "minLevel": 25, "exp": 21, "STRexp": 3, "DEFexp": 7, "wait_length": 31 },
+        { "name": "Mercury Ore", "minLevel": 40, "exp": 27, "STRexp": 4, "DEFexp": 9, "wait_length": 36 },
+        { "name": "Chromite Ore", "minLevel": 60, "exp": 35, "STRexp": 5, "DEFexp": 11, "wait_length": 40 },
+        { "name": "Uranium Ore", "minLevel": 70, "exp": 40, "STRexp": 6, "DEFexp": 13, "wait_length": 44 },
+        { "name": "Mystic Ore", "minLevel": 90, "exp": 55, "STRexp": 7, "DEFexp": 16, "wait_length": 55 }
+      ]
+    },
+
+    "Fishing": {
+      "name": "Fishing",
+      "items": [
+        { "name": "Cod", "minLevel": 1, "exp": 2, "DEXexp": 1, "Gold": 2, "wait_length": 7, "Material": { "Cheap Bait": "1"} },
+        { "name": "Salmon", "minLevel": 3, "exp": 4, "DEXexp": 2, "Gold": 2, "wait_length": 10, "Material": { "Cheap Bait": "1"} },
+        { "name": "Tuna", "minLevel": 5, "exp": 6, "DEXexp": 3, "Gold": 2, "wait_length": 12, "Material": { "Cheap Bait": "1"} },
+        { "name": "Trout", "minLevel": 8, "exp": 8, "DEXexp": 4, "Gold": 4, "wait_length": 14, "Material": { "Tarnished Bait": "1"} },
+        { "name": "Perch", "minLevel": 11, "exp": 10, "DEXexp": 5, "Gold": 4, "wait_length": 16, "Material": { "Tarnished Bait": "1"} },
+        { "name": "Herring", "minLevel": 15, "exp": 13, "DEXexp": 6, "Gold": 7, "wait_length": 18, "Material": { "Gleaming Bait": "1"} },
+        { "name": "Srdines", "minLevel": 25, "exp": 16, "DEXexp": 7, "Gold": 7, "wait_length": 21, "Material": { "Gleaming Bait": "1"} },
+        { "name": "Lobster", "minLevel": 30, "exp": 19, "DEXexp": 9, "Gold": 12, "wait_length": 24, "Material": { "Elemental Bait": "1"} },
+        { "name": "Crab", "minLevel": 40, "exp": 22, "DEXexp": 10, "Gold": 12, "wait_length": 27, "Material": { "Elemental Bait": "1"} },
+        { "name": "Turtule", "minLevel": 50, "exp": 27, "DEXexp": 11, "Gold": 16, "wait_length": 32, "Material": { "Eldritch Bait": "1"} },
+        { "name": "Stingray", "minLevel": 60, "exp": 35, "DEXexp": 12, "Gold": 16, "wait_length": 40, "Material": { "Eldritch Bait": "1"} },
+        { "name": "Lantern Fish", "minLevel": 80, "exp": 40, "DEXexp": 14, "Gold": 25, "wait_length": 41, "Material": { "Arccane Bait": "1"} },
+        { "name": "Great White Sharl", "minLevel": 90, "exp": 55, "DEXexp": 17, "Gold": 25, "wait_length": 45, "Material": { "Arcane Bait": "1"} }
+      ]
+    }
+}

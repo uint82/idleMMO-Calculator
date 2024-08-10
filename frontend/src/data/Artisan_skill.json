@@ -1,0 +1,73 @@
+{
+    "Alchemy": {
+      "name": "Alchemy",
+      "items": [
+        { "name": "Batlle Potion", "minLevel": 1, "exp": 90.1, "SPDexp": 12, "wait_length": 60, "Material": { "Lucky Rabbit Foot": "2", "Cheap Vial": "1" } },
+        { "name": "Lumberjack Essence Crystal", "minLevel": 2, "exp": 205, "SPDexp": 18, "wait_length": 70, "Material": { "Goblin Totem": "11", "Empty Crystal": "1" } },
+        { "name": "Miners Essence Crystal", "minLevel": 3, "exp": 228, "SPDexp": 24, "wait_length": 75, "Material": { "Duck Mouth": "4", "Empty Crystal": "1" } },
+        { "name": "Angler Essence Crystal", "minLevel": 4, "exp": 246, "SPDexp": 30, "wait_length": 80, "Material": { "Boar Tusk": "1", "Empty Crystal": "1" } },
+        { "name": "Smelting Essence Crystal", "minLevel": 5, "exp": 264, "SPDexp": 36, "wait_length": 90, "Material": { "Goblin Pouch": "5", "Empty Crystal": "1" } },
+        { "name": "Chefs Essence Crystal", "minLevel": 6, "exp": 276, "SPDexp": 42, "wait_length": 100, "Material": { "Goblin Scraps": "3", "Empty Crystal": "1" } },
+        { "name": "Dungeon Potion", "minLevel": 10, "exp": 144, "SPDexp": 48, "wait_length": 110, "Material": { "Goblin Crown": "1", "Cheap Vial": "1" } },
+        { "name": "Tumberfall Essence Crystal", "minLevel": 10, "exp": 300, "SPDexp": 54, "wait_length": 120, "Material": { "Dear Antler": "8", "Empty Crystal": "1" } },
+        { "name": "Rocksplitter Essence Crystal", "minLevel": 12, "exp": 324, "SPDexp": 60, "wait_length": 130, "Material": { "Cursed Talisman": "8", "Empty Crystal": "1" } },
+        { "name": "Deepsea Essence Crystal", "minLevel": 13, "exp": 336, "SPDexp": 66, "wait_length": 140, "Material": { "Ruiined Robes": "8", "Empty Crystal": "1" } },
+        { "name": "Hammerfell Essence Crystal", "minLevel":15, "exp": 348, "SPDexp": 72, "wait_length": 150, "Material": { "Snakes Head": "12", "Empty Crystal": "1" } },
+        { "name": "Flavorburst Essence Crystal", "minLevel": 17, "exp": 402, "SPDexp": 102, "wait_length": 260, "Material": { "Venom Extract": "3", "Empty Crystal": "1" } },
+        { "name": "Dungeon Master's Tonic", "minLevel": 50, "exp": 375, "SPDexp": 222, "wait_length": 300, "Material": { "Lions Teeth": "8", "Elemental Vial": "1" } }
+      ]
+    },
+
+    "Smelting": {
+      "name": "Smelting",
+      "items": [
+        { "name": "Tin Bar", "minLevel": 1, "exp": 3, "SPDexp": 1, "wait_length": 12, "Material": { "Tin Ore": "1", "Coal Ore": "1" } },
+        { "name": "Copper Bar", "minLevel": 5, "exp": 5, "SPDexp": 2, "wait_length": 15, "Material": { "Copper Ore": "1", "Coal Ore": "1" } },
+        { "name": "Iron Bar", "minLevel": 10, "exp": 10, "SPDexp": 3, "wait_length": 23, "Material": { "Iron Ore": "1", "Coal Ore": "1" } },
+        { "name": "Lead Bar", "minLevel": 15, "exp": 15, "SPDexp": 5, "wait_length": 27, "Material": { "Lead Ore": "1", "Coal Ore": "1" } },
+        { "name": "Steel Bar", "minLevel": 25, "exp": 21, "SPDexp": 7, "wait_length": 31, "Material": { "Steel Ore": "1", "Coal Ore": "1" } },
+        { "name": "Mercury Bar", "minLevel": 40, "exp": 27, "SPDexp": 9, "wait_length": 36, "Material": { "Mercury Ore": "1", "Coal Ore": "1" } },
+        { "name": "Chromite Bar", "minLevel": 60, "exp": 35, "SPDexp": 11, "wait_length": 40, "Material": { "Chromite Ore": "1", "Coal Ore": "1" } },
+        { "name": "Uranium Bar", "minLevel": 70, "exp": 40, "SPDexp": 13, "wait_length": 44, "Material": { "Uranium Ore": "1", "Coal Ore": "1" } },
+        { "name": "Mystic Bar", "minLevel": 90, "exp": 55, "SPDexp": 16, "wait_length": 55, "Material": { "Mystic Ore": "1", "Coal Ore": "1" } }
+      ]
+    },
+
+    "Cooking": {
+      "name": "Cooking",
+      "items": [
+        { "name": "Cooked Cod", "minLevel": 1, "exp": 2, "DEXexp": 1, "wait_length": 8, "Material": { "Cod": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Salmon", "minLevel": 3, "exp": 4, "DEXexp": 2, "wait_length": 12, "Material": { "Salmon": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Tuna", "minLevel": 5, "exp": 6, "DEXexp": 3, "wait_length": 14, "Material": { "Tuna": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Trout", "minLevel": 8, "exp": 8, "DEXexp": 4, "wait_length": 17, "Material": { "Trout": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Perch", "minLevel": 11, "exp": 10, "DEXexp": 5, "wait_length": 19, "Material": { "Perch": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Herring", "minLevel": 15, "exp": 13, "DEXexp": 6, "wait_length": 22, "Material": { "Herring": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Sardines", "minLevel": 25, "exp": 16, "DEXexp": 7, "wait_length": 25, "Material": { "Sardines": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Lobster", "minLevel": 30, "exp": 19, "DEXexp": 8, "wait_length": 28, "Material": { "Lobster": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Crab", "minLevel": 40, "exp": 22, "DEXexp": 9, "wait_length": 30, "Material": { "Crab": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Turtle", "minLevel": 50, "exp": 27, "DEXexp": 10, "wait_length": 35, "Material": { "Turtle": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Stingray", "minLevel": 60, "exp": 35, "DEXexp": 11, "wait_length": 40, "Material": { "Stingray": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Lantern Fish", "minLevel": 80, "exp": 40, "DEXexp": 13, "wait_length": 42, "Material": { "Lantern Fish": "1", "Coal Ore": "1" } },
+        { "name": "Cooked Great White Sharl", "minLevel": 90, "exp": 55, "DEXexp": 16, "wait_length": 55, "Material": { "Great White Shark": "1", "Coal Ore": "1" } }
+      ]
+    },
+
+    "Forge": {
+      "name": "Forge",
+      "items": [
+        { "name": "Oak Bow", "minLevel": 1, "exp": 10, "STRexp": 2, "wait_length": 25, "Material": { "Oak Log": "10", "Coal Ore": "5" } },
+        { "name": "Yew Bow", "minLevel": 5, "exp": 20, "STRexp": 3, "wait_length": 35, "Material": { "Yew Log": "10", "Coal Ore": "5" } },
+        { "name": "Spruce Bow", "minLevel": 10, "exp": 30, "STRexp": 4, "wait_length": 40, "Material": { "Spruce Log": "10", "Coal Ore": "5" } },
+        { "name": "Birch Bow", "minLevel": 15, "exp": 40, "STRexp": 5, "wait_length": 45, "Material": { "Birch Log": "10", "Coal Ore": "5" } },
+        { "name": "Banyan Bow", "minLevel": 25, "exp": 50, "STRexp": 7, "wait_length": 50, "Material": { "Banyan Log": "10", "Coal Ore": "5" } },
+        { "name": "Maple Bow", "minLevel": 35, "exp": 60, "STRexp": 8, "wait_length": 55, "Material": { "Maple Log": "10", "Coal Ore": "5" } },
+        { "name": "Willow Bow", "minLevel": 50, "exp": 70, "STRexp": 10, "wait_length": 60, "Material": { "Willow Log": "10", "Coal Ore": "5" } },
+        { "name": "Mahogany Bow", "minLevel": 65, "exp": 80, "STRexp": 12, "wait_length": 65, "Material": { "Mahogany Log": "10", "Coal Ore": "5" } },
+        { "name": "Mysstical Bow", "minLevel": 70, "exp": 100, "STRexp": 13, "wait_length": 70, "Material": { "Mystical Log": "10", "Coal Ore": "5" } },
+        { "name": "Whisperwind Bow", "minLevel": 71, "exp": 700, "STRexp": 14, "wait_length": 120, "Material": { "Oak Log": "200", "Yew Log": "200", "Lucky Rabbit Foot": "20", "Duck Mouth": "10", "Goblin Pouch": "5" } },
+        { "name": "Stormcaster", "minLevel": 72, "exp": 700, "STRexp": 14, "wait_length": 120, "Material": { "Oak Log": "200", "Yew Log": "250", "Dear Antler": "20", "Boar Tsuk": "5", "Snakes Head": "20" } },
+        { "name": "Shadow Shot", "minLevel": 73, "exp": 700, "STRexp": 14, "wait_length": 120, "Material": { "Oak Log": "250", "Yew Log": "150", "Spruce Log": "100", "Elk Antler": "10", "Moose Antler": "15", "Siren's Scale": "30" } },
+        { "name": "Frostbite Shot", "minLevel": 74, "exp": 700, "STRexp": 14, "wait_length": 120, "Material": { "Spruce Log": "300", "birch Log": "150", "Paarchment": "20", "Bone Fragment": "25", "Slime Extract": "15", "Djinn's Bottle": "20" } }
+      ]
+    }
+  }
