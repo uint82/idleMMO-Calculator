@@ -21,71 +21,56 @@ const Alchemy = () => {
     setAlchemyItems(skillData.Alchemy.items);
   }, []);
 
-  const calculateExpNeeded = (currentLvl, targetLvl) => {
-    const currentExp = parseInt(expData[currentLvl]);
-    const targetExp = parseInt(expData[targetLvl]);
-    return targetExp - currentExp;
+  const calculateAlchemyExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'alchemist') expBonus += 0.10;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    switch (buff) {
+      case 'alchemist': expBonus += 0.10; break;
+      // Add other relevant buffs here
+    }
+  
+    return expBonus;
   };
 
-  const applyClassBonuses = (baseExp, baseWaitLength, baseSPDExp) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let spdExp = baseSPDExp;
-    let classBonuses = [];
-
-    switch (playerClass) {
-      case 'alchemist':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.9 * 100) / 100;
-        classBonuses.push('+10% Alchemy exp', '-10% Alchemy wait length');
-        break;
-      case 'shadowblade':
-        spdExp = Math.round(spdExp * 1.05); // Increase SPD exp by 5%
-        classBonuses.push('+5% SPD exp', '+10% Hunt Efficiency', '+5% Battle exp');
-        break;
-      case 'forsaken':
-        exp = Math.round(exp * 0.5);
-        spdExp = Math.round(spdExp * 0.5);
-        classBonuses.push('-50% skill XP', '-50% SPD exp');
-        break;
-      // Add other relevant classes here
-      default:
-        break;
-    }
-
-    return { exp, waitLength, spdExp, classBonuses };
+  const calculateSPDExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'shadowblade') expBonus += 0.05;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    return expBonus;
   };
 
-  const applyBuffBonuses = (baseExp, baseWaitLength) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let buffBonuses = [];
+  const calculateEfficiency = () => {
+    let totalEfficiency = 0;
 
-    if (t1Bonus) {
-      exp = Math.round(exp * 1.15);
-      buffBonuses.push('T1: +15% Alchemy exp');
-    }
-    if (t2Bonus) {
-      exp = Math.round(exp * 1.20);
-      buffBonuses.push('T2: +20% Alchemy exp');
-    }
-    if (t3Bonus) {
-      exp = Math.round(exp * 1.30);
-      buffBonuses.push('T3: +30% Alchemy exp');
-    }  
+    if (isMember) totalEfficiency += 10;
+    if (playerClass === 'alchemist') totalEfficiency += 10;
 
     switch (buff) {
-      case 'alchemist':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.95 * 100) / 100;
-        buffBonuses.push('+10% Alchemy exp', '-5% wait length');
-        break;
+      case 'alchemist': totalEfficiency += 5; break;
       // Add other relevant buffs here
-      default:
-        break;
     }
 
-    return { exp, waitLength, buffBonuses };
+    return totalEfficiency;
+  };
+
+  const applyEfficiency = (baseWaitLength) => {
+    const efficiency = calculateEfficiency();
+    return baseWaitLength * (100 / (100 + efficiency));
   };
 
   const handleCalculate = (selectedItem) => {
@@ -102,23 +87,22 @@ const Alchemy = () => {
       const targetExp = parseInt(expData[targetLvl]);
       const expNeeded = targetExp - currentExp;
       
-      let itemExp = item.exp;
+      let baseItemExp = item.exp;
       let waitLength = item.wait_length;
-      let spdExp = item.SPDexp;
-  
-      if (isMember) {
-        itemExp *= 1.15;
-        spdExp *= 1.15;
-        waitLength *= 0.9;
-      }
+      let baseSPDExp = item.SPDexp;
 
-      const { exp: classExp, waitLength: classWaitLength, spdExp: classSPDExp, classBonuses } = applyClassBonuses(itemExp, waitLength, spdExp);
-      const { exp: buffExp, waitLength: buffWaitLength, buffBonuses } = applyBuffBonuses(classExp, classWaitLength);
+      const alchemyExpBonus = calculateAlchemyExpBonus();
+      const spdExpBonus = calculateSPDExpBonus();
 
-      const totalItems = Math.ceil(expNeeded / buffExp);
-      
-      const totalSPDexp = totalItems * classSPDExp;
-      const totalTimeInSeconds = Math.round(totalItems * buffWaitLength);
+      const itemExp = Math.round(baseItemExp * alchemyExpBonus);
+      const spdExp = Math.round(baseSPDExp * spdExpBonus);
+
+      const finalWaitLength = applyEfficiency(waitLength);
+      const totalEfficiency = calculateEfficiency();
+
+      const totalItems = Math.ceil(expNeeded / itemExp);
+      const totalSPDexp = totalItems * spdExp;
+      const totalTimeInSeconds = Math.round(totalItems * finalWaitLength);
       
       const materials = Object.entries(item.Material).map(([name, quantity]) => ({
         name,
@@ -134,11 +118,12 @@ const Alchemy = () => {
         isMember,
         playerClass,
         buff,
-        itemExp: Math.round(buffExp),
-        waitLength: buffWaitLength.toFixed(2),
-        spdExp: Math.round(classSPDExp),
-        classBonuses,
-        buffBonuses,
+        itemExp,
+        spdExp,
+        waitLength: finalWaitLength.toFixed(1),
+        spdExpBonus: (spdExpBonus - 1) * 100,
+        alchemyExpBonus: (alchemyExpBonus - 1) * 100,
+        totalEfficiency,
         materials
       });
       setActiveItem(selectedItem);
@@ -307,15 +292,9 @@ const Alchemy = () => {
           <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
           <p>Total SPD exp gained: {result.totalSPDexp.toLocaleString()}</p>
           <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
-          {result.isMember && (
-            <p className="membership-bonus">Membership bonus applied: +15% XP, +10% Efficiency</p>
-          )}
-          {result.playerClass && (
-            <p className="class-bonus">Class bonuses applied: {result.classBonuses.join(', ')}</p>
-          )}
-          {result.buffBonuses && result.buffBonuses.length > 0 && (
-            <p className="buff-bonus">Buff bonuses applied: {result.buffBonuses.join(', ')}</p>
-          )}
+          <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
+          <p className="exp-bonus">Total Alchemy exp bonus applied: {result.alchemyExpBonus.toFixed(2)}%</p>
+          <p className="exp-bonus">Total SPD exp bonus applied: {result.spdExpBonus.toFixed(2)}%</p>
           <p>XP per item: {result.itemExp}</p>
           <p>SPD exp per item: {result.spdExp}</p>
           <p>Wait time per item: {result.waitLength}s</p>
@@ -324,7 +303,7 @@ const Alchemy = () => {
             <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
           ))}
         </div>
-        )}
+      )}
         {result && result.error && (
           <div className="result error">
             <p>{result.error}</p>

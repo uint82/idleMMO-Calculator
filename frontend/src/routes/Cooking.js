@@ -13,83 +13,78 @@ const Cooking = () => {
   const [isMember, setIsMember] = useState(false);
   const [playerClass, setPlayerClass] = useState('');
   const [buff, setBuff] = useState('');
+  const [tool, setTool] = useState('');
   const [t1Bonus, setT1Bonus] = useState(false);
   const [t2Bonus, setT2Bonus] = useState(false);
   const [t3Bonus, setT3Bonus] = useState(false);
+
+  const tools = [
+    { name: 'Basic Stove', reduction: 0 },
+    { name: 'Improved Stove', reduction: 0.05 },
+    { name: 'Advanced Stove', reduction: 0.10 },
+    { name: 'Superior Stove', reduction: 0.15 },
+    { name: 'Master Stove', reduction: 0.20 },
+    { name: 'Grandmaster Stove', reduction: 0.25 },
+  ];
 
   useEffect(() => {
     setCookingItems(skillData.Cooking.items);
   }, []);
 
-  const calculateExpNeeded = (currentLvl, targetLvl) => {
-    const currentExp = parseInt(expData[currentLvl]);
-    const targetExp = parseInt(expData[targetLvl]);
-    return targetExp - currentExp;
-  };
+  const calculateEfficiency = () => {
+    let totalEfficiency = 0;
 
-  const applyClassBonuses = (baseExp, baseWaitLength, baseDEXExp) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let dexExp = baseDEXExp;
-    let classBonuses = [];
-
-    switch (playerClass) {
-      case 'chef':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.9 * 100) / 100;
-        classBonuses.push('+10% Cooking exp', '-10% Cooking Efficiency');
-        break;
-      case 'forsaken':
-        exp = Math.round(exp * 0.5);
-        dexExp = Math.round(dexExp * 0.5);
-        classBonuses.push('-50% skill XP', '-50% DEX exp');
-        break;
-      default:
-        break;
-    }
-
-    return { exp, waitLength, dexExp, classBonuses };
-  };
-
-  const applyBuffBonuses = (baseExp, baseWaitLength) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let buffBonuses = [];
-
-    if (t1Bonus) {
-      exp = Math.round(exp * 1.15);
-      buffBonuses.push('T1: +15% Cooking exp');
-    }
-    if (t2Bonus) {
-      exp = Math.round(exp * 1.20);
-      buffBonuses.push('T2: +20% Cooking exp');
-    }
-    if (t3Bonus) {
-      exp = Math.round(exp * 1.30);
-      buffBonuses.push('T3: +30% Cooking exp');
-    }  
+    if (isMember) totalEfficiency += 10;
+    if (playerClass === 'chef') totalEfficiency += 10;
 
     switch (buff) {
-      case 'Chefs':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.95 * 100) / 100;
-        buffBonuses.push('+10% Cooking exp', '+5% Efficiency');
-        break;
-      case 'Spicefinder':
-        exp = Math.round(exp * 1.45);
-        waitLength = Math.round(waitLength * 0.65 * 100) / 100;
-        buffBonuses.push('+35% Cooking exp', '+25% Efficiency');
-        break;
-      case 'Gourmet':
-        exp = Math.round(exp * 1.45);
-        waitLength = Math.round(waitLength * 0.65 * 100) / 100;
-        buffBonuses.push('+45% Cooking exp', '+35% Efficiency');
-        break;
-      default:
-        break;
+      case 'chefs': totalEfficiency += 5; break;
+      case 'spicefinder': totalEfficiency += 25; break;
+      case 'gourmet': totalEfficiency += 35; break;
     }
 
-    return { exp, waitLength, buffBonuses };
+    const selectedTool = tools.find(t => t.name === tool);
+    if (selectedTool) totalEfficiency += selectedTool.reduction * 100;
+
+    return totalEfficiency;
+  };
+
+  const applyEfficiency = (baseWaitLength) => {
+    const efficiency = calculateEfficiency();
+    return baseWaitLength * (100 / (100 + efficiency));
+  };
+
+  const calculateCookingExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'chef') expBonus += 0.10;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    switch (buff) {
+      case 'chefs': expBonus += 0.10; break;
+      case 'spicefinder': expBonus += 0.35; break;
+      case 'gourmet': expBonus += 0.45; break;
+    }
+  
+    return expBonus;
+  };
+
+  const calculateDEXExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    return expBonus;
   };
 
   const handleCalculate = (selectedItem) => {
@@ -106,23 +101,22 @@ const Cooking = () => {
       const targetExp = parseInt(expData[targetLvl]);
       const expNeeded = targetExp - currentExp;
       
-      let itemExp = item.exp;
+      let baseItemExp = item.exp;
       let waitLength = item.wait_length;
-      let dexExp = item.DEXexp;
-  
-      if (isMember) {
-        itemExp *= 1.15;
-        dexExp *= 1.15;
-        waitLength *= 0.9;
-      }
+      let baseDEXExp = item.DEXexp;
 
-      const { exp: classExp, waitLength: classWaitLength, dexExp: classDEXExp, classBonuses } = applyClassBonuses(itemExp, waitLength, dexExp);
-      const { exp: buffExp, waitLength: buffWaitLength, buffBonuses } = applyBuffBonuses(classExp, classWaitLength);
+      const cookingExpBonus = calculateCookingExpBonus();
+      const dexExpBonus = calculateDEXExpBonus();
 
-      const totalItems = Math.ceil(expNeeded / buffExp);
-      
-      const totalDEXexp = totalItems * classDEXExp;
-      const totalTimeInSeconds = Math.round(totalItems * buffWaitLength);
+      const itemExp = Math.round(baseItemExp * cookingExpBonus);
+      const dexExp = Math.round(baseDEXExp * dexExpBonus);
+
+      const finalWaitLength = applyEfficiency(waitLength);
+      const totalEfficiency = calculateEfficiency();
+
+      const totalItems = Math.ceil(expNeeded / itemExp);
+      const totalDEXexp = totalItems * dexExp;
+      const totalTimeInSeconds = Math.round(totalItems * finalWaitLength);
       
       const materials = Object.entries(item.Material).map(([name, quantity]) => ({
         name,
@@ -138,11 +132,13 @@ const Cooking = () => {
         isMember,
         playerClass,
         buff,
-        itemExp: Math.round(buffExp),
-        waitLength: buffWaitLength.toFixed(2),
-        dexExp: Math.round(classDEXExp),
-        classBonuses,
-        buffBonuses,
+        tool,
+        itemExp,
+        dexExp,
+        waitLength: finalWaitLength.toFixed(1),
+        dexExpBonus: (dexExpBonus - 1) * 100,
+        cookingExpBonus: (cookingExpBonus - 1) * 100,
+        totalEfficiency,
         materials
       });
       setActiveItem(selectedItem);
@@ -157,7 +153,7 @@ const Cooking = () => {
     if (activeItem) {
       handleCalculate(activeItem);
     }
-  }, [isMember, playerClass, buff, t1Bonus, t2Bonus, t3Bonus]);
+  }, [isMember, playerClass, buff, tool, t1Bonus, t2Bonus, t3Bonus]);
 
   const handleInputChange = (setter) => (e) => {
     const value = e.target.value;
@@ -286,9 +282,9 @@ const Cooking = () => {
                 onChange={(e) => setBuff(e.target.value)}
               >
                 <option value="">No Buff</option>
-                <option value="Chefs">Chefs</option>
-                <option value="Spicefinder">Spicefinder</option>
-                <option value="Gourmet">Gourmet</option>
+                <option value="chefs">Chefs</option>
+                <option value="spicefinder">Spicefinder</option>
+                <option value="gourmet">Gourmet</option>
               </select>
             </div>
           </div>
@@ -312,15 +308,9 @@ const Cooking = () => {
           <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
           <p>Total DEX exp gained: {result.totalDEXexp.toLocaleString()}</p>
           <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
-          {result.isMember && (
-            <p className="membership-bonus">Membership bonus applied: +15% XP, +10% Efficiency</p>
-          )}
-          {result.playerClass && (
-            <p className="class-bonus">Class bonuses applied: {result.classBonuses.join(', ')}</p>
-          )}
-          {result.buffBonuses && result.buffBonuses.length > 0 && (
-            <p className="buff-bonus">Buff bonuses applied: {result.buffBonuses.join(', ')}</p>
-          )}
+          <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
+          <p className="exp-bonus">Total Cooking exp bonus applied: {result.cookingExpBonus.toFixed(2)}%</p>
+          <p className="exp-bonus">Total DEX exp bonus applied: {result.dexExpBonus.toFixed(2)}%</p>
           <p>XP per item: {result.itemExp}</p>
           <p>DEX exp per item: {result.dexExp}</p>
           <p>Wait time per item: {result.waitLength}s</p>
@@ -329,7 +319,7 @@ const Cooking = () => {
             <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
           ))}
         </div>
-        )}
+      )}
         {result && result.error && (
           <div className="result error">
             <p>{result.error}</p>

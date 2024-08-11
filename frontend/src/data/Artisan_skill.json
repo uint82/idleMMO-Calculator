@@ -2,7 +2,7 @@
     "Alchemy": {
       "name": "Alchemy",
       "items": [
-        { "name": "Batlle Potion", "minLevel": 1, "exp": 90.1, "SPDexp": 12, "wait_length": 60, "Material": { "Lucky Rabbit Foot": "2", "Cheap Vial": "1" } },
+        { "name": "Batlle Potion", "minLevel": 1, "exp": 90, "SPDexp": 12, "wait_length": 60, "Material": { "Lucky Rabbit Foot": "2", "Cheap Vial": "1" } },
         { "name": "Lumberjack Essence Crystal", "minLevel": 2, "exp": 205, "SPDexp": 18, "wait_length": 70, "Material": { "Goblin Totem": "11", "Empty Crystal": "1" } },
         { "name": "Miners Essence Crystal", "minLevel": 3, "exp": 228, "SPDexp": 24, "wait_length": 75, "Material": { "Duck Mouth": "4", "Empty Crystal": "1" } },
         { "name": "Angler Essence Crystal", "minLevel": 4, "exp": 246, "SPDexp": 30, "wait_length": 80, "Material": { "Boar Tusk": "1", "Empty Crystal": "1" } },

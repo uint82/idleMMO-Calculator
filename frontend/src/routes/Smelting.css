@@ -186,3 +186,8 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: #333;
   color: white;
 }
+
+.exp-bonus {
+  color: #79ff3b;
+  font-weight: bold;
+}

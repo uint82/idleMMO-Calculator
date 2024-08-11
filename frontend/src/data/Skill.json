@@ -6,7 +6,7 @@
         { "name": "Yew Log", "minLevel": 5, "exp": 5, "STRexp": 2, "wait_length": 15 },
         { "name": "Spruce Log", "minLevel": 10, "exp": 10, "STRexp": 3, "wait_length": 23 },
         { "name": "Birch Log", "minLevel": 15, "exp": 15, "STRexp": 5, "wait_length": 27 },
-        { "name": "Banyan Log", "minLevel": 25, "exp": 21, "STRexp": 7, "wait_length": 31.5 },
+        { "name": "Banyan Log", "minLevel": 25, "exp": 21, "STRexp": 7, "wait_length": 31 },
         { "name": "Maple Log", "minLevel": 40, "exp": 27, "STRexp": 9, "wait_length": 36 },
         { "name": "Willow Log", "minLevel": 60, "exp": 35, "STRexp": 11, "wait_length": 40 },
         { "name": "Mahogany Log", "minLevel": 70, "exp": 40, "STRexp": 13, "wait_length": 44 },
@@ -41,11 +41,11 @@
         { "name": "Herring", "minLevel": 15, "exp": 13, "DEXexp": 6, "Gold": 7, "wait_length": 18, "Material": { "Gleaming Bait": "1"} },
         { "name": "Srdines", "minLevel": 25, "exp": 16, "DEXexp": 7, "Gold": 7, "wait_length": 21, "Material": { "Gleaming Bait": "1"} },
         { "name": "Lobster", "minLevel": 30, "exp": 19, "DEXexp": 9, "Gold": 12, "wait_length": 24, "Material": { "Elemental Bait": "1"} },
-        { "name": "Crab", "minLevel": 40, "exp": 22, "DEXexp": 10, "Gold": 12, "wait_length": 27, "Material": { "Elemental Bait": "1"} },
-        { "name": "Turtule", "minLevel": 50, "exp": 27, "DEXexp": 11, "Gold": 16, "wait_length": 32, "Material": { "Eldritch Bait": "1"} },
-        { "name": "Stingray", "minLevel": 60, "exp": 35, "DEXexp": 12, "Gold": 16, "wait_length": 40, "Material": { "Eldritch Bait": "1"} },
-        { "name": "Lantern Fish", "minLevel": 80, "exp": 40, "DEXexp": 14, "Gold": 25, "wait_length": 41, "Material": { "Arccane Bait": "1"} },
-        { "name": "Great White Sharl", "minLevel": 90, "exp": 55, "DEXexp": 17, "Gold": 25, "wait_length": 45, "Material": { "Arcane Bait": "1"} }
+        { "name": "Crab", "minLevel": 40, "exp": 22, "DEXexp": 9, "Gold": 12, "wait_length": 27, "Material": { "Elemental Bait": "1"} },
+        { "name": "Turtle", "minLevel": 50, "exp": 27, "DEXexp": 10, "Gold": 16, "wait_length": 32, "Material": { "Eldritch Bait": "1"} },
+        { "name": "Stingray", "minLevel": 60, "exp": 35, "DEXexp": 11, "Gold": 16, "wait_length": 40, "Material": { "Eldritch Bait": "1"} },
+        { "name": "Lantern Fish", "minLevel": 80, "exp": 40, "DEXexp": 13, "Gold": 25, "wait_length": 41, "Material": { "Arccane Bait": "1"} },
+        { "name": "Great White Shark", "minLevel": 90, "exp": 55, "DEXexp": 16, "Gold": 25, "wait_length": 45, "Material": { "Arcane Bait": "1"} }
       ]
     }
 }

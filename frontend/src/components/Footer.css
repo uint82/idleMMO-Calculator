@@ -3,6 +3,7 @@
     color: #ffffff;
     padding: 2rem 0;
     font-family: Arial, sans-serif;
+    width: 100%;
   }
   
   .footer-content {
@@ -55,5 +56,24 @@
     .footer-content {
       flex-direction: column;
       gap: 1rem;
+    }
+  
+    .footer-socials, .footer-links {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .footer {
+      padding: 1rem 0;
+    }
+  
+    .social-icon {
+      font-size: 20px;
+    }
+  
+    .footer-link {
+      font-size: 14px;
     }
   }

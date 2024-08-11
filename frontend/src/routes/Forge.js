@@ -13,71 +13,78 @@ const Forge = () => {
   const [isMember, setIsMember] = useState(false);
   const [playerClass, setPlayerClass] = useState('');
   const [buff, setBuff] = useState('');
+  const [tool, setTool] = useState('');
   const [t1Bonus, setT1Bonus] = useState(false);
   const [t2Bonus, setT2Bonus] = useState(false);
   const [t3Bonus, setT3Bonus] = useState(false);
+
+  const tools = [
+    { name: 'Basic Anvil', reduction: 0 },
+    { name: 'Improved Anvil', reduction: 0.05 },
+    { name: 'Advanced Anvil', reduction: 0.10 },
+    { name: 'Superior Anvil', reduction: 0.15 },
+    { name: 'Master Anvil', reduction: 0.20 },
+    { name: 'Grandmaster Anvil', reduction: 0.25 },
+  ];
 
   useEffect(() => {
     setForgeItems(skillData.Forge.items);
   }, []);
 
-  const applyClassBonuses = (baseExp, baseWaitLength, baseSTRExp) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let strExp = baseSTRExp;
-    let classBonuses = [];
+  const calculateEfficiency = () => {
+    let totalEfficiency = 0;
 
-    switch (playerClass) {
-      case 'blacksmith':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.9 * 100) / 100;
-        classBonuses.push('+10% Forge exp', '+10% Forge wait length');
-        break;
-      case 'warrior':
-        strExp = Math.round(strExp * 1.10);  // +10% STR exp
-        classBonuses.push('+10% STR exp', '+5% Battle exp', '+5% Hunt exp');
-        break;
-      case 'forsaken':
-        exp = Math.round(exp * 0.5);
-        strExp = Math.round(strExp * 0.5);
-        classBonuses.push('-50% skill XP', '-50% STR exp');
-        break;
-      default:
-        break;
-    }
-
-    return { exp, waitLength, strExp, classBonuses };
-  };
-
-  const applyBuffBonuses = (baseExp, baseWaitLength) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let buffBonuses = [];
-
-    if (t1Bonus) {
-      exp = Math.round(exp * 1.15);
-      buffBonuses.push('T1: +15% Forge exp');
-    }
-    if (t2Bonus) {
-      exp = Math.round(exp * 1.20);
-      buffBonuses.push('T2: +20% Forge exp');
-    }
-    if (t3Bonus) {
-      exp = Math.round(exp * 1.30);
-      buffBonuses.push('T3: +30% Forge exp');
-    }  
+    if (isMember) totalEfficiency += 10;
+    if (playerClass === 'blacksmith') totalEfficiency += 10;
 
     switch (buff) {
-      case 'blacksmith':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.95 * 100) / 100;
-        buffBonuses.push('+10% Forge exp', '+5% Efficiency');
-        break;
-      default:
-        break;
+      case 'forge': totalEfficiency += 5; break;
+      case 'molten': totalEfficiency += 25; break;
+      case 'tampering': totalEfficiency += 35; break;
     }
 
-    return { exp, waitLength, buffBonuses };
+    const selectedTool = tools.find(t => t.name === tool);
+    if (selectedTool) totalEfficiency += selectedTool.reduction * 100;
+
+    return totalEfficiency;
+  };
+
+  const applyEfficiency = (baseWaitLength) => {
+    const efficiency = calculateEfficiency();
+    return baseWaitLength * (100 / (100 + efficiency));
+  };
+
+  const calculateForgeExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    switch (buff) {
+      case 'forge': expBonus += 0.10; break;
+      case 'molten': expBonus += 0.35; break;
+      case 'tampering': expBonus += 0.45; break;
+    }
+  
+    return expBonus;
+  };
+
+  const calculateSTRExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'warrior') expBonus += 0.10;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    return expBonus;
   };
 
   const handleCalculate = (selectedItem) => {
@@ -94,23 +101,22 @@ const Forge = () => {
       const targetExp = parseInt(expData[targetLvl]);
       const expNeeded = targetExp - currentExp;
       
-      let itemExp = item.exp;
+      let baseItemExp = item.exp;
       let waitLength = item.wait_length;
-      let strExp = item.STRexp;
-  
-      if (isMember) {
-        itemExp *= 1.15;
-        strExp *= 1.15;
-        waitLength *= 0.9;
-      }
+      let baseSTRExp = item.STRexp;
 
-      const { exp: classExp, waitLength: classWaitLength, strExp: classSTRExp, classBonuses } = applyClassBonuses(itemExp, waitLength, strExp);
-      const { exp: buffExp, waitLength: buffWaitLength, buffBonuses } = applyBuffBonuses(classExp, classWaitLength);
+      const forgeExpBonus = calculateForgeExpBonus();
+      const strExpBonus = calculateSTRExpBonus();
 
-      const totalItems = Math.ceil(expNeeded / buffExp);
-      
-      const totalSTRexp = totalItems * classSTRExp;
-      const totalTimeInSeconds = Math.round(totalItems * buffWaitLength);
+      const itemExp = Math.round(baseItemExp * forgeExpBonus);
+      const strExp = Math.round(baseSTRExp * strExpBonus);
+
+      const finalWaitLength = applyEfficiency(waitLength);
+      const totalEfficiency = calculateEfficiency();
+
+      const totalItems = Math.ceil(expNeeded / itemExp);
+      const totalSTRexp = totalItems * strExp;
+      const totalTimeInSeconds = Math.round(totalItems * finalWaitLength);
       
       const materials = Object.entries(item.Material).map(([name, quantity]) => ({
         name,
@@ -126,11 +132,13 @@ const Forge = () => {
         isMember,
         playerClass,
         buff,
-        itemExp: Math.round(buffExp),
-        waitLength: buffWaitLength.toFixed(2),
-        strExp: Math.round(classSTRExp),
-        classBonuses,
-        buffBonuses,
+        tool,
+        itemExp,
+        strExp,
+        waitLength: finalWaitLength.toFixed(1),
+        strExpBonus: (strExpBonus - 1) * 100,
+        forgeExpBonus: (forgeExpBonus - 1) * 100,
+        totalEfficiency,
         materials
       });
       setActiveItem(selectedItem);
@@ -145,7 +153,7 @@ const Forge = () => {
     if (activeItem) {
       handleCalculate(activeItem);
     }
-  }, [isMember, playerClass, buff, t1Bonus, t2Bonus, t3Bonus]);
+  }, [isMember, playerClass, buff, tool, t1Bonus, t2Bonus, t3Bonus]);
 
   const handleInputChange = (setter) => (e) => {
     const value = e.target.value;
@@ -274,6 +282,9 @@ const Forge = () => {
                 onChange={(e) => setBuff(e.target.value)}
               >
                 <option value="">No Buff</option>
+                <option value="forge">Forge</option>
+                <option value="molten">Molten</option>
+                <option value="tampering">Tampering</option>
               </select>
             </div>
           </div>
@@ -297,15 +308,9 @@ const Forge = () => {
           <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
           <p>Total STR exp gained: {result.totalSTRexp.toLocaleString()}</p>
           <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
-          {result.isMember && (
-            <p className="membership-bonus">Membership bonus applied: +15% XP, +10% Efficiency</p>
-          )}
-          {result.playerClass && (
-            <p className="class-bonus">Class bonuses applied: {result.classBonuses.join(', ')}</p>
-          )}
-          {result.buffBonuses && result.buffBonuses.length > 0 && (
-            <p className="buff-bonus">Buff bonuses applied: {result.buffBonuses.join(', ')}</p>
-          )}
+          <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
+          <p className="exp-bonus">Total Forge exp bonus applied: {result.forgeExpBonus.toFixed(2)}%</p>
+          <p className="exp-bonus">Total STR exp bonus applied: {result.strExpBonus.toFixed(2)}%</p>
           <p>XP per item: {result.itemExp}</p>
           <p>STR exp per item: {result.strExp}</p>
           <p>Wait time per item: {result.waitLength}s</p>
@@ -314,7 +319,7 @@ const Forge = () => {
             <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
           ))}
         </div>
-        )}
+      )}
         {result && result.error && (
           <div className="result error">
             <p>{result.error}</p>

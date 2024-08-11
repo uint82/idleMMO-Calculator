@@ -13,87 +13,79 @@ const Smelting = () => {
   const [isMember, setIsMember] = useState(false);
   const [playerClass, setPlayerClass] = useState('');
   const [buff, setBuff] = useState('');
+  const [tool, setTool] = useState('');
   const [t1Bonus, setT1Bonus] = useState(false);
   const [t2Bonus, setT2Bonus] = useState(false);
   const [t3Bonus, setT3Bonus] = useState(false);
+
+  const tools = [
+    { name: 'Basic Furnace', reduction: 0 },
+    { name: 'Improved Furnace', reduction: 0.05 },
+    { name: 'Advanced Furnace', reduction: 0.10 },
+    { name: 'Superior Furnace', reduction: 0.15 },
+    { name: 'Master Furnace', reduction: 0.20 },
+    { name: 'Grandmaster Furnace', reduction: 0.25 },
+  ];
 
   useEffect(() => {
     setSmeltingItems(skillData.Smelting.items);
   }, []);
 
-  const calculateExpNeeded = (currentLvl, targetLvl) => {
-    const currentExp = parseInt(expData[currentLvl]);
-    const targetExp = parseInt(expData[targetLvl]);
-    return targetExp - currentExp;
-  };
+  const calculateEfficiency = () => {
+    let totalEfficiency = 0;
 
-  const applyClassBonuses = (baseExp, baseWaitLength, baseSPDExp) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let spdExp = baseSPDExp;
-    let classBonuses = [];
-
-    switch (playerClass) {
-      case 'blacksmith':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.9 * 100) / 100;
-        classBonuses.push('+10% Smelting exp', '+10% Smelting Efficiency');
-        break;
-      case 'shadowblade':
-        spdExp = Math.round(spdExp * 1.05); // Increase SPD exp by 5%
-        classBonuses.push('+5% SPD exp', '+10% Hunt Efficiency', '+5% Battle exp');
-        break;
-      case 'forsaken':
-        exp = Math.round(exp * 0.5);
-        spdExp = Math.round(spdExp * 0.5);
-        classBonuses.push('-50% skill XP', '-50% SPD exp');
-        break;
-      default:
-        break;
-    }
-
-    return { exp, waitLength, spdExp, classBonuses };
-  };
-
-  const applyBuffBonuses = (baseExp, baseWaitLength) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let buffBonuses = [];
-
-    if (t1Bonus) {
-      exp = Math.round(exp * 1.15);
-      buffBonuses.push('T1: +15% Smelting exp');
-    }
-    if (t2Bonus) {
-      exp = Math.round(exp * 1.20);
-      buffBonuses.push('T2: +20% Smelting exp');
-    }
-    if (t3Bonus) {
-      exp = Math.round(exp * 1.30);
-      buffBonuses.push('T3: +30% Smelting exp');
-    }  
+    if (isMember) totalEfficiency += 10;
+    if (playerClass === 'blacksmith') totalEfficiency += 10;
 
     switch (buff) {
-      case 'Smelting':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.95 * 100) / 100;
-        buffBonuses.push('+10% Smelting exp', '+5% Efficiency');
-        break;
-      case 'Molten':
-        exp = Math.round(exp * 1.45);
-        waitLength = Math.round(waitLength * 0.65 * 100) / 100;
-        buffBonuses.push('+35% Smelting exp', '+25% Efficiency');
-        break;
-      case 'Tampering':
-        exp = Math.round(exp * 1.45);
-        waitLength = Math.round(waitLength * 0.65 * 100) / 100;
-        buffBonuses.push('+45% Smelting exp', '+35% Efficiency');
-        break;
-      default:
-        break;
+      case 'smelting': totalEfficiency += 5; break;
+      case 'molten': totalEfficiency += 25; break;
+      case 'tampering': totalEfficiency += 35; break;
     }
 
-    return { exp, waitLength, buffBonuses };
+    const selectedTool = tools.find(t => t.name === tool);
+    if (selectedTool) totalEfficiency += selectedTool.reduction * 100;
+
+    return totalEfficiency;
+  };
+
+  const applyEfficiency = (baseWaitLength) => {
+    const efficiency = calculateEfficiency();
+    return baseWaitLength * (100 / (100 + efficiency));
+  };
+
+  const calculateSmeltingExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'blacksmith') expBonus += 0.10;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    switch (buff) {
+      case 'smelting': expBonus += 0.10; break;
+      case 'molten': expBonus += 0.35; break;
+      case 'tampering': expBonus += 0.45; break;
+    }
+  
+    return expBonus;
+  };
+
+  const calculateSPDExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'shadowblade') expBonus += 0.05;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    return expBonus;
   };
 
   const handleCalculate = (selectedItem) => {
@@ -110,23 +102,22 @@ const Smelting = () => {
       const targetExp = parseInt(expData[targetLvl]);
       const expNeeded = targetExp - currentExp;
       
-      let itemExp = item.exp;
+      let baseItemExp = item.exp;
       let waitLength = item.wait_length;
-      let spdExp = item.SPDexp;
-  
-      if (isMember) {
-        itemExp *= 1.15;
-        spdExp *= 1.15;
-        waitLength *= 0.9;
-      }
+      let baseSPDExp = item.SPDexp;
 
-      const { exp: classExp, waitLength: classWaitLength, spdExp: classSPDExp, classBonuses } = applyClassBonuses(itemExp, waitLength, spdExp);
-      const { exp: buffExp, waitLength: buffWaitLength, buffBonuses } = applyBuffBonuses(classExp, classWaitLength);
+      const smeltingExpBonus = calculateSmeltingExpBonus();
+      const spdExpBonus = calculateSPDExpBonus();
 
-      const totalItems = Math.ceil(expNeeded / buffExp);
-      
-      const totalSPDexp = totalItems * classSPDExp;
-      const totalTimeInSeconds = Math.round(totalItems * buffWaitLength);
+      const itemExp = Math.round(baseItemExp * smeltingExpBonus);
+      const spdExp = Math.round(baseSPDExp * spdExpBonus);
+
+      const finalWaitLength = applyEfficiency(waitLength);
+      const totalEfficiency = calculateEfficiency();
+
+      const totalItems = Math.ceil(expNeeded / itemExp);
+      const totalSPDexp = totalItems * spdExp;
+      const totalTimeInSeconds = Math.round(totalItems * finalWaitLength);
       
       const materials = Object.entries(item.Material).map(([name, quantity]) => ({
         name,
@@ -142,11 +133,13 @@ const Smelting = () => {
         isMember,
         playerClass,
         buff,
-        itemExp: Math.round(buffExp),
-        waitLength: buffWaitLength.toFixed(2),
-        spdExp: Math.round(classSPDExp),
-        classBonuses,
-        buffBonuses,
+        tool,
+        itemExp,
+        spdExp,
+        waitLength: finalWaitLength.toFixed(1),
+        spdExpBonus: (spdExpBonus - 1) * 100,
+        smeltingExpBonus: (smeltingExpBonus - 1) * 100,
+        totalEfficiency,
         materials
       });
       setActiveItem(selectedItem);
@@ -161,7 +154,7 @@ const Smelting = () => {
     if (activeItem) {
       handleCalculate(activeItem);
     }
-  }, [isMember, playerClass, buff, t1Bonus, t2Bonus, t3Bonus]);
+  }, [isMember, playerClass, buff, tool, t1Bonus, t2Bonus, t3Bonus]);
 
   const handleInputChange = (setter) => (e) => {
     const value = e.target.value;
@@ -290,9 +283,9 @@ const Smelting = () => {
                 onChange={(e) => setBuff(e.target.value)}
               >
                 <option value="">No Buff</option>
-                <option value="Smelting">Smelting</option>
-                <option value="Molten">Molten</option>
-                <option value="Tampering">Tampering</option>
+                <option value="smelting">Smelting</option>
+                <option value="molten">Molten</option>
+                <option value="tampering">Tampering</option>
               </select>
             </div>
           </div>
@@ -316,15 +309,9 @@ const Smelting = () => {
           <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
           <p>Total SPD exp gained: {result.totalSPDexp.toLocaleString()}</p>
           <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
-          {result.isMember && (
-            <p className="membership-bonus">Membership bonus applied: +15% XP, +10% Efficiency</p>
-          )}
-          {result.playerClass && (
-            <p className="class-bonus">Class bonuses applied: {result.classBonuses.join(', ')}</p>
-          )}
-          {result.buffBonuses && result.buffBonuses.length > 0 && (
-            <p className="buff-bonus">Buff bonuses applied: {result.buffBonuses.join(', ')}</p>
-          )}
+          <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
+          <p className="exp-bonus">Total Smelting exp bonus applied: {result.smeltingExpBonus.toFixed(2)}%</p>
+          <p className="exp-bonus">Total SPD exp bonus applied: {result.spdExpBonus.toFixed(2)}%</p>
           <p>XP per item: {result.itemExp}</p>
           <p>SPD exp per item: {result.spdExp}</p>
           <p>Wait time per item: {result.waitLength}s</p>
@@ -333,7 +320,7 @@ const Smelting = () => {
             <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
           ))}
         </div>
-        )}
+      )}
         {result && result.error && (
           <div className="result error">
             <p>{result.error}</p>

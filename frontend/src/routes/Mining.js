@@ -33,108 +33,76 @@ const Mining = () => {
     setMiningItems(skillData.Mining.items);
   }, []);
 
-  const calculateExpNeeded = (currentLvl, targetLvl) => {
-    const currentExp = parseInt(expData[currentLvl]);
-    const targetExp = parseInt(expData[targetLvl]);
-    return targetExp - currentExp;
-  };
+  const calculateEfficiency = () => {
+    let totalEfficiency = 0;
 
-  const applyClassBonuses = (baseExp, baseWaitLength, baseStrExp, baseDefExp) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let strExp = baseStrExp;
-    let defExp = baseDefExp;
-    let classBonuses = [];
-
-    switch (playerClass) {
-      case 'warrior':
-        strExp = Math.round(strExp * 1.10);
-        classBonuses.push('+10% STR exp', '+5% Battle exp', '+5% Hunt exp');
-        break;
-      case 'shadowblade':
-        classBonuses.push('+5% SPD exp', '+10% Hunt Efficiency', '+5% Battle exp');
-        break;
-      case 'ranger':
-        classBonuses.push('+7% DEX exp', '+8% Hunt Efficiency', '+5% Battle exp');
-        break;
-      case 'forsaken':
-        exp = Math.round(exp * 0.5);
-        strExp = Math.round(strExp * 0.5);
-        classBonuses.push('-50% skill XP', '-50% STR exp');
-        break;
-      case 'lumberjack':
-        classBonuses.push('+10% Woodcutting exp', '+10% Woodcutting Efficiency');
-        break;
-      case 'miner':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.9 * 100) / 100;
-        classBonuses.push('+10% Mining exp', '+10% Efficiency');
-        break;
-      case 'angler':
-        classBonuses.push('+10% Fishing exp', '+10% Efficiency');
-        break;
-      case 'chef':
-        classBonuses.push('+10% Cooking exp', '+10% Efficiency');
-        break;
-      default:
-        break;
-    }
-
-    return { exp, waitLength, strExp, defExp, classBonuses };
-  };
-
-  const applyBuffBonuses = (baseExp, baseWaitLength) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let buffBonuses = [];
-
-    if (t1Bonus) {
-      exp = Math.round(exp * 1.15);
-      buffBonuses.push('T1: +15% Mining exp');
-    }
-    if (t2Bonus) {
-      exp = Math.round(exp * 1.20);
-      buffBonuses.push('T2: +20% Mining exp');
-    }
-    if (t3Bonus) {
-      exp = Math.round(exp * 1.30);
-      buffBonuses.push('T3: +30% Mining exp');
-    }  
+    if (isMember) totalEfficiency += 10;
+    if (playerClass === 'miner') totalEfficiency += 10;
 
     switch (buff) {
-      case 'Miner':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.95 * 100) / 100;
-        buffBonuses.push('+10% Mining exp', '+5% Efficiency');
-        break;
-      case 'Rocksplitter':
-        exp = Math.round(exp * 1.20);
-        waitLength = Math.round(waitLength * 0.90 * 100) / 100;
-        buffBonuses.push('+20% Mining exp', '+10% Efficiency');
-        break;
-      case 'Oreseeker':
-        exp = Math.round(exp * 1.35);
-        waitLength = Math.round(waitLength * 0.75 * 100) / 100;
-        buffBonuses.push('+35% Mining exp', '+25% Efficiency');
-        break;
-      case 'Earthcore':
-        exp = Math.round(exp * 1.45);
-        waitLength = Math.round(waitLength * 0.65 * 100) / 100;
-        buffBonuses.push('+45% Mining exp', '+35% Efficiency');
-        break;
-      default:
-        break;
+      case 'Miner': totalEfficiency += 5; break;
+      case 'Rocksplitter': totalEfficiency += 10; break;
+      case 'Oreseeker': totalEfficiency += 25; break;
+      case 'Earthcore': totalEfficiency += 35; break;
     }
 
-    return { exp, waitLength, buffBonuses };
+    const selectedTool = tools.find(t => t.name === tool);
+    if (selectedTool) totalEfficiency += selectedTool.reduction * 100;
+
+    return totalEfficiency;
   };
 
-  const applyToolReduction = (baseWaitLength) => {
-    const selectedTool = tools.find(t => t.name === tool);
-    if (selectedTool) {
-      return baseWaitLength * (1 - selectedTool.reduction);
+  const applyEfficiency = (baseWaitLength) => {
+    const efficiency = calculateEfficiency();
+    return baseWaitLength * (100 / (100 + efficiency));
+  };
+
+  const calculateMiningExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'miner') expBonus += 0.10;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    switch (buff) {
+      case 'Miner': expBonus += 0.10; break;
+      case 'Rocksplitter': expBonus += 0.20; break;
+      case 'Oreseeker': expBonus += 0.35; break;
+      case 'Earthcore': expBonus += 0.45; break;
     }
-    return baseWaitLength;
+  
+    return expBonus;
+  };
+
+  const calculateStrExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'warrior') expBonus += 0.10;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    return expBonus;
+  };
+
+  const calculateDefExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    return expBonus;
   };
 
   const handleCalculate = (selectedItem) => {
@@ -151,28 +119,26 @@ const Mining = () => {
       const targetExp = parseInt(expData[targetLvl]);
       const expNeeded = targetExp - currentExp;
       
-      let itemExp = item.exp;
+      let baseItemExp = item.exp;
       let waitLength = item.wait_length;
-      let strExp = item.STRexp;
-      let defExp = item.DEFexp;
-  
-      if (isMember) {
-        itemExp *= 1.15;
-        strExp *= 1.15;
-        defExp *= 1.15;
-        waitLength *= 0.9;
-      }
+      let baseStrExp = item.STRexp;
+      let baseDefExp = item.DEFexp;
 
+      const miningExpBonus = calculateMiningExpBonus();
+      const strExpBonus = calculateStrExpBonus();
+      const defExpBonus = calculateDefExpBonus();
 
-      const { exp: classExp, waitLength: classWaitLength, strExp: classStrExp, defExp: classDefExp, classBonuses } = applyClassBonuses(itemExp, waitLength, strExp, defExp);
-      const { exp: buffExp, waitLength: buffWaitLength, buffBonuses } = applyBuffBonuses(classExp, classWaitLength);
-      const toolWaitLength = applyToolReduction(buffWaitLength);
+      const itemExp = Math.round(baseItemExp * miningExpBonus);
+      const strExp = Math.round(baseStrExp * strExpBonus);
+      const defExp = Math.round(baseDefExp * defExpBonus);
 
-      const totalItems = Math.ceil(expNeeded / buffExp);
-      
-      const totalSTRexp = totalItems * classStrExp;
-      const totalDEFexp = totalItems * classDefExp;
-      const totalTimeInSeconds = Math.round(totalItems * toolWaitLength);
+      const finalWaitLength = applyEfficiency(waitLength);
+      const totalEfficiency = calculateEfficiency();
+
+      const totalItems = Math.ceil(expNeeded / itemExp);
+      const totalSTRexp = totalItems * strExp;
+      const totalDEFexp = totalItems * defExp;
+      const totalTimeInSeconds = Math.round(totalItems * finalWaitLength);
       
       setResult({
         totalExp: Math.round(expNeeded),
@@ -185,13 +151,14 @@ const Mining = () => {
         playerClass,
         buff,
         tool,
-        itemExp: Math.round(buffExp),
-        waitLength: toolWaitLength.toFixed(2),
-        strExp: Math.round(classStrExp),
-        defExp: Math.round(classDefExp),
-        classBonuses,
-        buffBonuses,
-        toolReduction: tools.find(t => t.name === tool)?.reduction * 100 || 0
+        itemExp,
+        strExp,
+        defExp,
+        waitLength: finalWaitLength.toFixed(1),
+        strExpBonus: (strExpBonus - 1) * 100,
+        defExpBonus: (defExpBonus - 1) * 100,
+        miningExpBonus: (miningExpBonus - 1) * 100,
+        totalEfficiency
       });
       setActiveItem(selectedItem);
     } else {
@@ -321,15 +288,15 @@ const Mining = () => {
                 value={playerClass}
                 onChange={(e) => setPlayerClass(e.target.value)}
               >
-              <option value="">Select Class</option>
-              <option value="warrior">Warrior</option>
-              <option value="shadowblade">Shadowblade</option>
-              <option value="ranger">Ranger</option>
-              <option value="forsaken">Forsaken</option>
-              <option value="lumberjack">Lumberjack</option>
-              <option value="miner">Miner</option>
-              <option value="angler">Angler</option>
-              <option value="chef">Chef</option>
+                <option value="">Select Class</option>
+                <option value="warrior">Warrior</option>
+                <option value="shadowblade">Shadowblade</option>
+                <option value="ranger">Ranger</option>
+                <option value="forsaken">Forsaken</option>
+                <option value="lumberjack">Lumberjack</option>
+                <option value="miner">Miner</option>
+                <option value="angler">Angler</option>
+                <option value="chef">Chef</option>
               </select>
             </div>
             <div className="buff-select">
@@ -380,24 +347,16 @@ const Mining = () => {
           <p>Total STR exp gained: {result.totalSTRexp.toLocaleString()}</p>
           <p>Total DEF exp gained: {result.totalDEFexp.toLocaleString()}</p>
           <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
-          {result.isMember && (
-            <p className="membership-bonus">Membership bonus applied: +15% XP, +10% Efficiency</p>
-          )}
-          {result.playerClass && (
-            <p className="class-bonus">Class bonuses applied: {result.classBonuses.join(', ')}</p>
-          )}
-          {result.buffBonuses && result.buffBonuses.length > 0 && (
-            <p className="buff-bonus">Buff bonuses applied: {result.buffBonuses.join(', ')}</p>
-          )}
-          {result.tool && (
-            <p className="tool-bonus">Tool bonus applied: +{result.toolReduction}% Efficiency</p>
-          )}
+          <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
+          <p className="exp-bonus">Total Mining exp bonus applied: {result.miningExpBonus.toFixed(2)}%</p>
+          <p className="exp-bonus">Total STR exp bonus applied: {result.strExpBonus.toFixed(2)}%</p>
+          <p className="exp-bonus">Total DEF exp bonus applied: {result.defExpBonus.toFixed(2)}%</p>
           <p>XP per ore: {result.itemExp}</p>
           <p>STR exp per ore: {result.strExp}</p>
           <p>DEF exp per ore: {result.defExp}</p>
           <p>Wait time per ore: {result.waitLength}s</p>
         </div>
-        )}
+      )}
         {result && result.error && (
           <div className="result error">
             <p>{result.error}</p>

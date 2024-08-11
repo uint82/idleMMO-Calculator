@@ -33,107 +33,63 @@ const Woodcutting = () => {
     setWoodcuttingItems(skillData.woodcutting.items);
   }, []);
 
-  const calculateExpNeeded = (currentLvl, targetLvl) => {
-    const currentExp = parseInt(expData[currentLvl]);
-    const targetExp = parseInt(expData[targetLvl]);
-    return targetExp - currentExp;
-  };
+  const calculateEfficiency = () => {
+    let totalEfficiency = 0;
 
-  const applyClassBonuses = (baseExp, baseWaitLength, baseStrExp) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let strExp = baseStrExp;
-    let classBonuses = [];
-
-    switch (playerClass) {
-      case 'warrior':
-        strExp = Math.round(strExp * 1.10);
-        classBonuses.push('+10% STR exp', '+5% Battle exp', '+5% Hunt exp');
-        break;
-      case 'shadowblade':
-        classBonuses.push('+5% SPD exp', '+10% Hunt Efficiency', '+5% Battle exp');
-        break;
-      case 'ranger':
-        classBonuses.push('+7% DEX exp', '+8% Hunt Efficiency', '+5% Battle exp');
-        break;
-      case 'forsaken':
-        exp = Math.round(exp * 0.5);
-        strExp = Math.round(strExp * 0.5);
-        classBonuses.push('-50% skill XP', '-50% STR exp');
-        break;
-      case 'lumberjack':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.9 * 100) / 100;
-        classBonuses.push('+10% Woodcutting exp', '+10% Woodcutting Efficiency');
-        break;
-      case 'miner':
-        classBonuses.push('+10% Mining exp', '+10% Mining Efficiency');
-        break;
-      case 'angler':
-        classBonuses.push('+10% Fishing exp', '+10% Fishing Efficiency');
-        break;
-      case 'chef':
-        classBonuses.push('+10% Cooking exp', '+10% Cooking Efficiency');
-        break;
-      default:
-        break;
-    }
-
-    return { exp, waitLength, strExp, classBonuses };
-  };
-
-  const applyBuffBonuses = (baseExp, baseWaitLength) => {
-    let exp = baseExp;
-    let waitLength = baseWaitLength;
-    let buffBonuses = [];
-
-    if (t1Bonus) {
-      exp = Math.round(exp * 1.15);
-      buffBonuses.push('T1: +15% exp');
-    }
-    if (t2Bonus) {
-      exp = Math.round(exp * 1.20);
-      buffBonuses.push('T2: +20% exp');
-    }
-    if (t3Bonus) {
-      exp = Math.round(exp * 1.30);
-      buffBonuses.push('T3: +30% exp');
-    }  
+    if (isMember) totalEfficiency += 10;
+    if (playerClass === 'lumberjack') totalEfficiency += 10;
 
     switch (buff) {
-      case 'lumberjack':
-        exp = Math.round(exp * 1.10);
-        waitLength = Math.round(waitLength * 0.95 * 100) / 100;
-        buffBonuses.push('+10% Woodcutting exp', '+5% Efficiency');
-        break;
-      case 'timberfall':
-        exp = Math.round(exp * 1.20);
-        waitLength = Math.round(waitLength * 0.90 * 100) / 100;
-        buffBonuses.push('+20% Woodcutting exp', '+10% Efficiency');
-        break;
-      case 'felling':
-        exp = Math.round(exp * 1.35);
-        waitLength = Math.round(waitLength * 0.75 * 100) / 100;
-        buffBonuses.push('+35% Woodcutting exp', '+25% Efficiency');
-        break;
-      case 'yggdrasil':
-        exp = Math.round(exp * 1.45);
-        waitLength = Math.round(waitLength * 0.65 * 100) / 100;
-        buffBonuses.push('+45% Woodcutting exp', '+35% Efficiency');
-        break;
-      default:
-        break;
+      case 'lumberjack': totalEfficiency += 5; break;
+      case 'timberfall': totalEfficiency += 10; break;
+      case 'felling': totalEfficiency += 25; break;
+      case 'yggdrasil': totalEfficiency += 35; break;
     }
 
-    return { exp, waitLength, buffBonuses };
+    const selectedTool = tools.find(t => t.name === tool);
+    if (selectedTool) totalEfficiency += selectedTool.reduction * 100;
+
+    return totalEfficiency;
   };
 
-  const applyToolReduction = (baseWaitLength) => {
-    const selectedTool = tools.find(t => t.name === tool);
-    if (selectedTool) {
-      return baseWaitLength * (1 - selectedTool.reduction);
+  const applyEfficiency = (baseWaitLength) => {
+    const efficiency = calculateEfficiency();
+    return baseWaitLength * (100 / (100 + efficiency));
+  };
+
+  const calculateWoodcuttingExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'lumberjack') expBonus += 0.10;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    switch (buff) {
+      case 'lumberjack': expBonus += 0.10; break;
+      case 'timberfall': expBonus += 0.20; break;
+      case 'felling': expBonus += 0.35; break;
+      case 'yggdrasil': expBonus += 0.45; break;
     }
-    return baseWaitLength;
+  
+    return expBonus;
+  };
+
+  const calculateStrExpBonus = () => {
+    let expBonus = 1;
+  
+    if (isMember) expBonus += 0.15;
+    if (playerClass === 'warrior') expBonus += 0.10;
+    if (playerClass === 'forsaken') expBonus -= 0.50;
+  
+    if (t1Bonus) expBonus += 0.15;
+    if (t2Bonus) expBonus += 0.20;
+    if (t3Bonus) expBonus += 0.30;
+  
+    return expBonus;
   };
 
   const handleCalculate = (selectedItem) => {
@@ -150,24 +106,22 @@ const Woodcutting = () => {
       const targetExp = parseInt(expData[targetLvl]);
       const expNeeded = targetExp - currentExp;
       
-      let itemExp = item.exp;
+      let baseItemExp = item.exp;
       let waitLength = item.wait_length;
-      let strExp = item.STRexp;
-  
-      if (isMember) {
-        itemExp *= 1.15;
-        strExp *= 1.15;
-        waitLength *= 0.9;
-      }
+      let baseStrExp = item.STRexp;
 
-      const { exp: classExp, waitLength: classWaitLength, strExp: classStrExp, classBonuses } = applyClassBonuses(itemExp, waitLength, strExp);
-      const { exp: buffExp, waitLength: buffWaitLength, buffBonuses } = applyBuffBonuses(classExp, classWaitLength);
-      const toolWaitLength = applyToolReduction(buffWaitLength);
+      const woodcuttingExpBonus = calculateWoodcuttingExpBonus();
+      const strExpBonus = calculateStrExpBonus();
 
-      const totalItems = Math.ceil(expNeeded / buffExp);
-      
-      const totalSTRexp = totalItems * classStrExp;
-      const totalTimeInSeconds = Math.round(totalItems * toolWaitLength);
+      const itemExp = Math.round(baseItemExp * woodcuttingExpBonus);
+      const strExp = Math.round(baseStrExp * strExpBonus);
+
+      const finalWaitLength = applyEfficiency(waitLength);
+      const totalEfficiency = calculateEfficiency();
+
+      const totalItems = Math.ceil(expNeeded / itemExp);
+      const totalSTRexp = totalItems * strExp;
+      const totalTimeInSeconds = Math.round(totalItems * finalWaitLength);
       
       setResult({
         totalExp: Math.round(expNeeded),
@@ -179,12 +133,12 @@ const Woodcutting = () => {
         playerClass,
         buff,
         tool,
-        itemExp: Math.round(buffExp),
-        waitLength: toolWaitLength.toFixed(2),
-        strExp: Math.round(classStrExp),
-        classBonuses,
-        buffBonuses,
-        toolReduction: tools.find(t => t.name === tool)?.reduction * 100 || 0
+        itemExp,
+        strExp,
+        waitLength: finalWaitLength.toFixed(1),
+        strExpBonus: (strExpBonus - 1) * 100,
+        woodcuttingExpBonus: (woodcuttingExpBonus - 1) * 100,
+        totalEfficiency
       });
       setActiveItem(selectedItem);
     } else {
@@ -193,7 +147,6 @@ const Woodcutting = () => {
       });
     }
   };
-
 
   useEffect(() => {
     if (activeItem) {
@@ -269,7 +222,7 @@ const Woodcutting = () => {
           </div>
         </div>
         <div className="options-group">
-        <div className="checkbox-group">
+          <div className="checkbox-group">
             <div className="checkbox-item">
               <input
                 type="checkbox"
@@ -308,49 +261,49 @@ const Woodcutting = () => {
             </div>
           </div>
           <div className="selects-row">
-          <div className="class-select">
-            <label htmlFor="player-class">Class:</label>
-            <select
-              id="player-class"
-              value={playerClass}
-              onChange={(e) => setPlayerClass(e.target.value)}
-            >
-              <option value="">Select Class</option>
-              <option value="warrior">Warrior</option>
-              <option value="shadowblade">Shadowblade</option>
-              <option value="ranger">Ranger</option>
-              <option value="forsaken">Forsaken</option>
-              <option value="lumberjack">Lumberjack</option>
-              <option value="miner">Miner</option>
-              <option value="angler">Angler</option>
-              <option value="chef">Chef</option>
-            </select>
-          </div>
-          <div className="buff-select">
-            <label htmlFor="buff">Essence Crystal:</label>
-            <select
-              id="buff"
-              value={buff}
-              onChange={(e) => setBuff(e.target.value)}
-            >
-              <option value="">No Buff</option>
-              <option value="lumberjack">Lumberjack</option>
-              <option value="timberfall">Timberfall</option>
-              <option value="felling">Felling</option>
-              <option value="yggdrasil">Yggdrasil</option>
-            </select>
-          </div>
-          <div className="tool-select">
-            <label htmlFor="tool">Tool:</label>
-            <select
-              id="tool"
-              value={tool}
-              onChange={(e) => setTool(e.target.value)}
-            >
-              {tools.map((t, index) => (
-                <option key={index} value={t.name}>{t.name}</option>
-              ))}
-            </select>
+            <div className="class-select">
+              <label htmlFor="player-class">Class:</label>
+              <select
+                id="player-class"
+                value={playerClass}
+                onChange={(e) => setPlayerClass(e.target.value)}
+              >
+                <option value="">Select Class</option>
+                <option value="warrior">Warrior</option>
+                <option value="shadowblade">Shadowblade</option>
+                <option value="ranger">Ranger</option>
+                <option value="forsaken">Forsaken</option>
+                <option value="lumberjack">Lumberjack</option>
+                <option value="miner">Miner</option>
+                <option value="angler">Angler</option>
+                <option value="chef">Chef</option>
+              </select>
+            </div>
+            <div className="buff-select">
+              <label htmlFor="buff">Essence Crystal:</label>
+              <select
+                id="buff"
+                value={buff}
+                onChange={(e) => setBuff(e.target.value)}
+              >
+                <option value="">No Buff</option>
+                <option value="lumberjack">Lumberjack</option>
+                <option value="timberfall">Timberfall</option>
+                <option value="felling">Felling</option>
+                <option value="yggdrasil">Yggdrasil</option>
+              </select>
+            </div>
+            <div className="tool-select">
+              <label htmlFor="tool">Tool:</label>
+              <select
+                id="tool"
+                value={tool}
+                onChange={(e) => setTool(e.target.value)}
+              >
+                {tools.map((t, index) => (
+                  <option key={index} value={t.name}>{t.name}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -373,23 +326,14 @@ const Woodcutting = () => {
           <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
           <p>Total STR exp gained: {result.totalSTRexp.toLocaleString()}</p>
           <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
-          {result.isMember && (
-            <p className="membership-bonus">Membership bonus applied: +15% XP, +10% Efficiency</p>
-          )}
-          {result.playerClass && (
-            <p className="class-bonus">Class bonuses applied: {result.classBonuses.join(', ')}</p>
-          )}
-          {result.buffBonuses && result.buffBonuses.length > 0 && (
-            <p className="buff-bonus">Buff bonuses applied: {result.buffBonuses.join(', ')}</p>
-          )}
-          {result.tool && (
-            <p className="tool-bonus">Tool bonus applied: +{result.toolReduction}% Efficiency</p>
-          )}
+          <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
+          <p className="exp-bonus">Total Woodcutting exp bonus applied: {result.woodcuttingExpBonus.toFixed(2)}%</p>
+          <p className="exp-bonus">Total STR exp bonus applied: {result.strExpBonus.toFixed(2)}%</p>
           <p>XP per log: {result.itemExp}</p>
           <p>STR exp per log: {result.strExp}</p>
           <p>Wait time per log: {result.waitLength}s</p>
         </div>
-        )}
+      )}
         {result && result.error && (
           <div className="result error">
             <p>{result.error}</p>
