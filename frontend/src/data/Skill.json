@@ -40,7 +40,7 @@
         { "name": "Perch", "minLevel": 11, "exp": 10, "DEXexp": 5, "Gold": 4, "wait_length": 16, "Material": { "Tarnished Bait": "1"} },
         { "name": "Herring", "minLevel": 15, "exp": 13, "DEXexp": 6, "Gold": 7, "wait_length": 18, "Material": { "Gleaming Bait": "1"} },
         { "name": "Srdines", "minLevel": 25, "exp": 16, "DEXexp": 7, "Gold": 7, "wait_length": 21, "Material": { "Gleaming Bait": "1"} },
-        { "name": "Lobster", "minLevel": 30, "exp": 19, "DEXexp": 9, "Gold": 12, "wait_length": 24, "Material": { "Elemental Bait": "1"} },
+        { "name": "Lobster", "minLevel": 30, "exp": 19, "DEXexp": 8, "Gold": 12, "wait_length": 24, "Material": { "Elemental Bait": "1"} },
         { "name": "Crab", "minLevel": 40, "exp": 22, "DEXexp": 9, "Gold": 12, "wait_length": 27, "Material": { "Elemental Bait": "1"} },
         { "name": "Turtle", "minLevel": 50, "exp": 27, "DEXexp": 10, "Gold": 16, "wait_length": 32, "Material": { "Eldritch Bait": "1"} },
         { "name": "Stingray", "minLevel": 60, "exp": 35, "DEXexp": 11, "Gold": 16, "wait_length": 40, "Material": { "Eldritch Bait": "1"} },

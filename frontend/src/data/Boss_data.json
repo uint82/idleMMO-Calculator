@@ -1,0 +1,103 @@
+{
+    "bosses": [
+      {
+        "name": "Isadora",
+        "location": "Bluebell Hollow",
+        "minLevel": 1,
+        "exp": 200,
+        "wait_length": 7200,
+        "battle_length": 60,
+        "drop": ["Aquarion Egg", "Chest of Upgrade Stones", "Fluffy Egg"]
+      },
+      {
+        "name": "Malgazar",
+        "location": "Whispering Woods",
+        "minLevel": 10,
+        "exp": 300,
+        "wait_length": 9000,
+        "battle_length": 70,
+        "drop": ["Furbella Egg", "Chest of Upgrade Stones", "Shella Egg"]
+      },
+      {
+        "name": "Obsidianus",
+        "location": "Eldoria",
+        "minLevel": 20,
+        "exp": 450,
+        "wait_length": 10800,
+        "battle_length": 80,
+        "drop": ["Leafy Egg", "Whiskers Egg", "Chest of Upgrade Stones", "Shadowscale Egg"]
+      },
+      {
+        "name": "Shadowmire",
+        "location": "Crystal Caverns",
+        "minLevel": 30,
+        "exp": 650,
+        "wait_length": 12600,
+        "battle_length": 90,
+        "drop": ["Aquastar Egg", "Chest of Upgrade Stones", "Nutwhisker Egg"]
+      },
+      {
+        "name": "Rogoth",
+        "location": "Skyreach Peak",
+        "minLevel": 40,
+        "exp": 800,
+        "wait_length": 14400,
+        "battle_length": 100,
+        "drop": ["Stardust Egg", "Chest of Upgrade Stones", "Blooplord Egg"]
+      },
+      {
+        "name": "Petrok The Guardian",
+        "location": "Enchanted Oasis",
+        "minLevel": 50,
+        "exp": 1000,
+        "wait_length": 16200,
+        "battle_length": 110,
+        "drop": ["Wrex Egg", "Vulpina Egg", "Chest of Upgrade Stones"]
+      },
+      {
+        "name": "Lurka Stonefist",
+        "location": "Floating Gardens of Aetheria",
+        "minLevel": 60,
+        "exp": 1200,
+        "wait_length": 18000,
+        "battle_length": 120,
+        "drop": ["Draconis Egg", "Fangor Egg", "Florian Egg", "Chest of Upgrade Stones"]
+      },
+      {
+        "name": "Nethrax",
+        "location": "Celestial Observatory",
+        "minLevel": 70,
+        "exp": 1400,
+        "wait_length": 19800,
+        "battle_length": 130,
+        "drop": ["Emberwhisp Egg", "Lumi Egg", "Raptora Egg", "Chest of Upgrade Stones", "Leovar Egg"]
+      },
+      {
+        "name": "Skarn The Dreadwake",
+        "location": "Isle of Whispers",
+        "minLevel": 80,
+        "exp": 1600,
+        "wait_length": 21600,
+        "battle_length": 140,
+        "drop": ["Drakeling Egg", "Pyrhoflare Egg", "Vexalia Egg", "Zephyrix Egg", "Chest of Upgrade Stones"]
+      },
+      {
+        "name": "Voragor",
+        "location": "The Citadel",
+        "minLevel": 90,
+        "exp": 2500,
+        "wait_length": 23400,
+        "battle_length": 150,
+        "drop": ["Scalethorn Egg", "Solarix Egg", "Chest of Upgrade Stones", "Thunderhoof Egg", "Aerion Egg"]
+      },
+      {
+        "name": "Thal'guth",
+        "location": "The Citadel",
+        "minLevel": 95,
+        "exp": 3500,
+        "wait_length": 25200,
+        "battle_length": 170,
+        "drop": ["Dragon Soulstone", "Sauronix Egg", "Chest of Upgrade Stones", "Starmane Egg", "Wyrmshadow Egg"]
+      }
+    ]
+}

@@ -21,6 +21,7 @@ function NavBar() {
         <NavLink to="/smelting" className="navbar-link" activeclassname="active">Smelting</NavLink>
         <NavLink to="/cooking" className="navbar-link" activeclassname="active">Cooking</NavLink>
         <NavLink to="/forge" className="navbar-link" activeclassname="active">Forge</NavLink>
+        <NavLink to="/combat" className="navbar-link" activeclassname="active">Combat</NavLink>
       </div>
     </nav>
   );

@@ -1,0 +1,384 @@
+.combat-calculator {
+    font-family: Arial, sans-serif;
+    color: white;
+    background-color: #1e1e1e;
+    padding: 20px;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+  
+  h1, h2 {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  .calculator-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .input-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+  }
+  
+  .input-group label {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .input-group input {
+    width: 80px;
+    padding: 5px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #333;
+    color: white;
+  }
+  
+  .percentage-input-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .percentage-input-wrapper input {
+    padding-right: 20px;
+  }
+  
+  .percentage-symbol {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .arrow {
+    font-size: 24px;
+    margin: 0 10px;
+  }
+  
+  .combat-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .combat-item-button {
+    padding: 10px;
+    background-color: #2e2e2e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .combat-item-button:hover {
+    background-color: #357abd;
+  }
+  
+  .combat-item-button.active {
+    background-color: #357abd;
+  }
+  
+  .result {
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 15px;
+    text-align: left;
+  }
+  
+  .result p {
+    margin: 5px 0;
+    font-size: 16px;
+  }
+  
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .combat-item-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .combat-item-button.disabled:hover {
+    background-color: #1e1e1e;
+  }
+  
+  .options-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    margin: 0 10px 10px;
+  }
+  
+  .checkbox-item input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .checkbox-item label {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  
+  .selects-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    width: 100%;
+  }
+  
+  .class-select,
+  .buff-select,
+  .weapon-select {
+    margin: 0 10px 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .class-select label,
+  .buff-select label,
+  .weapon-select label {
+    margin-right: 5px;
+    white-space: nowrap;
+  }
+  
+  .class-select select,
+  .buff-select select,
+  .weapon-select select {
+    padding: 5px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #333;
+    color: white;
+  }
+  
+  .membership-bonus {
+    color: gold;
+    font-weight: bold;
+  }
+  
+  .class-bonus {
+    color: Aqua;
+    font-weight: bold;
+  }
+  
+  .buff-bonus {
+    color: LightCoral;
+    font-weight: bold;
+  }
+  
+  .total-efficiency {
+    color: Orange;
+    font-weight: bold;
+  }
+  
+  .combat-type-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .combat-type-button {
+    padding: 10px 20px;
+    background-color: #2e2e2e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin: 0 5px;
+  }
+  
+  .combat-type-button:hover {
+    background-color: #357abd;
+  }
+  
+  .combat-type-button.active {
+    background-color: #357abd;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .input-row {
+      flex-direction: column; 
+      align-items: stretch; 
+      width: 20%;
+      margin-left: 125px;
+    }
+  
+    .input-group {
+      width: 100%;
+      margin-bottom: 5px 0; 
+    }
+  
+    .input-group input {
+      width: 100%; 
+      padding: 10px; 
+      box-sizing: border-box;
+      display: center;
+    }
+  
+    .percentage-input-wrapper {
+      width: 100%; 
+      flex: 1;
+    }
+  
+    .percentage-input-wrapper input {
+      width:calc(100% - 25px);
+      padding-right: 25px;
+    }
+  
+    .arrow {
+      display: none;
+      align-self: center;
+    }
+  
+    .input-row:first-of-type {
+      display: flex;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+  
+    .input-row:first-of-type .input-group {
+      margin-right: 0px;
+    }
+  
+    .input-row:first-of-type .arrow {
+      display: block;
+      margin: auto;
+      text-align: flex;
+    }
+  
+    .checkbox-group {
+      display: flex;
+      flex-direction: column; 
+      align-items: center; 
+      width: 100%; 
+      margin-left: 200px;
+    }
+  
+    .checkbox-item {
+      width: 100%;
+      margin-bottom: 10px; 
+    }
+  
+    h1, h2 {
+      font-size: 1.5em; 
+      margin-bottom: 10px;
+    }
+  
+    label {
+      font-size: 14px;
+    }
+  
+    .combat-item-button {
+      width: 100%; 
+      margin-bottom: 10px; 
+      padding: 15px; 
+      font-size: 14px;
+    }
+  
+    .calculator-content {
+      padding: 10px;
+      width: 100%;
+      margin: 0;
+    }
+  
+    .combat-calculator {
+      padding: 15px; 
+    }
+  
+    .result {
+      padding: 10px;
+    }
+  
+    .input-row, .options-group {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .input-group, .checkbox-group, .selects-row {
+      width: 100%;
+      text-align: center;
+    }
+  
+    .combat-type-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .combat-type-button {
+      width: 100%;
+      margin: 5px 0;
+    }
+  }
+  
+  .exp-bonus {
+    color: #79ff3b;
+    font-weight: bold;
+  }
+
+  .location-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .location-button {
+    padding: 10px 15px;
+    background-color: #2e2e2e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .location-button:hover {
+    background-color: #357abd;
+  }
+  
+  .location-button.active {
+    background-color: #357abd;
+    color: white;
+  }
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import './Alchemy.css';
 import skillData from '../data/Artisan_skill.json';
 import expData from '../data/Exp.json';
@@ -7,6 +7,9 @@ const Alchemy = () => {
   const [currentLevel, setCurrentLevel] = useState('');
   const [currentPercentage, setCurrentPercentage] = useState('');
   const [targetLevel, setTargetLevel] = useState('');
+  const [currentSPDLevel, setCurrentSPDLevel] = useState('');
+  const [currentSPDPercentage, setCurrentSPDPercentage] = useState('');
+  const [targetSPDLevel, setTargetSPDLevel] = useState('');
   const [result, setResult] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
   const [alchemyItems, setAlchemyItems] = useState([]);
@@ -50,6 +53,14 @@ const Alchemy = () => {
     if (t1Bonus) expBonus += 0.15;
     if (t2Bonus) expBonus += 0.20;
     if (t3Bonus) expBonus += 0.30;
+
+    switch (buff) {
+      case 'galeforce': expBonus += 0.10; break;
+      case 'quickstep': expBonus += 0.20; break;
+      case 'windrider': expBonus += 0.30; break;
+      case 'lightning': expBonus += 0.40; break;
+      default: break; 
+    }
   
     return expBonus;
   };
@@ -73,40 +84,56 @@ const Alchemy = () => {
     return baseWaitLength * (100 / (100 + efficiency));
   };
 
-  const handleCalculate = (selectedItem) => {
+  const handleCalculate = useCallback((selectedItem) => {
     const item = alchemyItems.find(i => i.name === selectedItem);
-    if (item && parseInt(currentLevel) >= item.minLevel) {
-      const currentLvl = parseInt(currentLevel);
-      const targetLvl = parseInt(targetLevel);
+    if (item && (parseInt(currentLevel) >= item.minLevel || currentSPDLevel)) {
+      const currentLvl = parseInt(currentLevel) || 1;
+      const targetLvl = parseInt(targetLevel) || currentLvl;
+      const currentSPDLvl = parseInt(currentSPDLevel) || 1;
+      const targetSPDLvl = parseInt(targetSPDLevel) || currentSPDLvl;
       
       const currentLevelExp = parseInt(expData[currentLvl]);
       const nextLevelExp = parseInt(expData[currentLvl + 1]);
       const percentage = currentPercentage === '' ? 0 : parseFloat(currentPercentage);
       const currentExp = currentLevelExp + ((nextLevelExp - currentLevelExp) * percentage / 100);
       
+      const currentSPDLevelExp = parseInt(expData[currentSPDLvl]);
+      const nextSPDLevelExp = parseInt(expData[currentSPDLvl + 1]);
+      const spdPercentage = currentSPDPercentage === '' ? 0 : parseFloat(currentSPDPercentage);
+      const currentSPDExp = currentSPDLevelExp + ((nextSPDLevelExp - currentSPDLevelExp) * spdPercentage / 100);
+      
       const targetExp = parseInt(expData[targetLvl]);
+      const targetSPDExp = parseInt(expData[targetSPDLvl]);
       const expNeeded = targetExp - currentExp;
+      const spdExpNeeded = targetSPDExp - currentSPDExp;
       
       let baseItemExp = item.exp;
       let waitLength = item.wait_length;
       let baseSPDExp = item.SPDexp;
-
+  
       const alchemyExpBonus = calculateAlchemyExpBonus();
       const spdExpBonus = calculateSPDExpBonus();
-
-      const itemExp = Math.round(baseItemExp * alchemyExpBonus);
-      const spdExp = Math.round(baseSPDExp * spdExpBonus);
-
+  
+      const itemExp = Math.round(baseItemExp * alchemyExpBonus + 0.00000001);
+      const spdExp = Math.round(baseSPDExp * spdExpBonus + 0.00000001);
+  
       const finalWaitLength = applyEfficiency(waitLength);
       const totalEfficiency = calculateEfficiency();
-
+  
       const totalItems = Math.ceil(expNeeded / itemExp);
+      const totalSPDItems = Math.ceil(spdExpNeeded / spdExp);
       const totalSPDexp = totalItems * spdExp;
       const totalTimeInSeconds = Math.round(totalItems * finalWaitLength);
+      const totalSPDTimeInSeconds = Math.round(totalSPDItems * finalWaitLength);
       
       const materials = Object.entries(item.Material).map(([name, quantity]) => ({
         name,
         quantity: parseInt(quantity) * totalItems
+      }));
+
+      const spdMaterials = Object.entries(item.Material).map(([name, quantity]) => ({
+        name,
+        quantity: parseInt(quantity) * totalSPDItems
       }));
 
       setResult({
@@ -114,6 +141,9 @@ const Alchemy = () => {
         totalItems,
         totalSPDexp: Math.round(totalSPDexp),
         totalTimeInSeconds,
+        totalSPDExp: Math.round(spdExpNeeded),
+        totalSPDItems,
+        totalSPDTimeInSeconds,
         selectedItem,
         isMember,
         playerClass,
@@ -124,15 +154,18 @@ const Alchemy = () => {
         spdExpBonus: (spdExpBonus - 1) * 100,
         alchemyExpBonus: (alchemyExpBonus - 1) * 100,
         totalEfficiency,
-        materials
+        showAlchemy: currentLevel !== '' || targetLevel !== '',
+        showSPD: currentSPDLevel !== '' || targetSPDLevel !== '',
+        materials,
+        spdMaterials,
       });
       setActiveItem(selectedItem);
     } else {
       setResult({
-        error: `You need to be at least level ${item.minLevel} to create ${selectedItem}.`
+        error: `You need to be at least level ${item.minLevel} to create ${selectedItem}, or input SPD levels.`
       });
     }
-  };
+  }, [currentLevel, currentPercentage, targetLevel, currentSPDLevel, currentSPDPercentage, targetSPDLevel, isMember, playerClass, buff, t1Bonus, t2Bonus, t3Bonus, alchemyItems]);
 
   useEffect(() => {
     if (activeItem) {
@@ -207,6 +240,46 @@ const Alchemy = () => {
             />
           </div>
         </div>
+        <h1>Speed</h1>
+        <div className="input-row">
+          <div className="input-group">
+            <label htmlFor="current-spd-level">Current Lvl</label>
+            <input
+              id="current-spd-level"
+              type="number"
+              value={currentSPDLevel}
+              onChange={handleInputChange(setCurrentSPDLevel)}
+              min="1"
+              max="100"
+            />
+          </div>
+          <div className="input-group percentage">
+            <label htmlFor="current-spd-percentage">Current %</label>
+            <div className="percentage-input-wrapper">
+              <input
+                id="current-spd-percentage"
+                type="number"
+                value={currentSPDPercentage}
+                onChange={handleInputChange(setCurrentSPDPercentage)}
+                min="0"
+                max="99"
+              />
+              <span className="percentage-symbol">%</span>
+            </div>
+          </div>
+          <div className="arrow">→</div>
+          <div className="input-group">
+            <label htmlFor="target-spd-level">Target lvl</label>
+            <input
+              id="target-spd-level"
+              type="number"
+              value={targetSPDLevel}
+              onChange={handleInputChange(setTargetSPDLevel)}
+              min="2"
+              max="100"
+            />
+          </div>
+        </div>
         <div className="options-group">
           <div className="checkbox-group">
             <div className="checkbox-item">
@@ -268,7 +341,10 @@ const Alchemy = () => {
                 onChange={(e) => setBuff(e.target.value)}
               >
                 <option value="">No Buff</option>
-                {/* Add other relevant buffs here */}
+                <option value="galeforce">Galeforce</option>
+                <option value="quickstep">Quickstep</option>
+                <option value="windrider">Windrider</option>
+                <option value="lightning">Lightning Sprint</option>
               </select>
             </div>
           </div>
@@ -287,23 +363,48 @@ const Alchemy = () => {
           ))}
         </div>
         {result && !result.error && (
-        <div className="result">
-          <p>Total exp needed: {result.totalExp.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
-          <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
-          <p>Total SPD exp gained: {result.totalSPDexp.toLocaleString()}</p>
-          <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
-          <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
-          <p className="exp-bonus">Total Alchemy exp bonus applied: {result.alchemyExpBonus.toFixed(2)}%</p>
-          <p className="exp-bonus">Total SPD exp bonus applied: {result.spdExpBonus.toFixed(2)}%</p>
-          <p>XP per item: {result.itemExp}</p>
-          <p>SPD exp per item: {result.spdExp}</p>
-          <p>Wait time per item: {result.waitLength}s</p>
-          <h3>Materials needed:</h3>
-          {result.materials.map((material, index) => (
-            <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
-          ))}
-        </div>
-      )}
+          <div className="result">
+            {result.showAlchemy && (
+              <>
+                <h3>Alchemy Results:</h3>
+                <p>Total exp needed: {result.totalExp.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
+                <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
+                <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
+              </>
+            )}
+            {result.showSPD && (
+              <>
+                <h3>Speed Results:</h3>
+                <p>Total SPD exp needed: {result.totalSPDExp.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
+                <p>Total {result.selectedItem} for SPD: {result.totalSPDItems.toLocaleString()}</p>
+                <p>Total time needed for SPD: {formatTime(result.totalSPDTimeInSeconds)}</p>
+              </>
+            )}
+            <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
+            <p className="exp-bonus">Total Alchemy exp bonus applied: {result.alchemyExpBonus.toFixed(2)}%</p>
+            <p className="exp-bonus">Total SPD exp bonus applied: {result.spdExpBonus.toFixed(2)}%</p>
+            <p>XP per item: {result.itemExp}</p>
+            <p>SPD exp per item: {result.spdExp}</p>
+            <p>Wait time per item: {result.waitLength}s</p>
+            {result.showAlchemy && (
+              <>
+                <h3>Materials needed for Alchemy:</h3>
+                {result.materials.map((material, index) => (
+                  <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
+                ))}
+              </>
+            )}
+            
+            {result.showSPD && (
+              <>
+                <h3>Materials needed for Speed:</h3>
+                {result.spdMaterials.map((material, index) => (
+                  <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
+                ))}
+              </>
+            )}
+          </div>
+        )}
         {result && result.error && (
           <div className="result error">
             <p>{result.error}</p>

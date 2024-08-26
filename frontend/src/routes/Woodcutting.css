@@ -67,6 +67,16 @@ h1, h2 {
   margin: 0 10px;
 }
 
+.input-row + .input-row {
+  margin-top: 20px;
+}
+
+.result h3 {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #79ff3b;
+}
+
 .woodcutting-items {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

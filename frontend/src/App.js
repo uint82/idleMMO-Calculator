@@ -12,6 +12,7 @@ import Alchemy from './routes/Alchemy';
 import Smelting from './routes/Smelting';
 import Cooking from './routes/Cooking';
 import Forge from './routes/Forge';
+import Combat from './routes/Combat';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/smelting" element={<Smelting />} />
             <Route path="/cooking" element={<Cooking />} />
             <Route path="/forge" element={<Forge />} />
+            <Route path="/combat" element={<Combat />} />
             {/* Add more routes as needed */}
           </Routes>
         <Footer />

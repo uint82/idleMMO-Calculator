@@ -1,0 +1,316 @@
+{
+    "monsters": [
+      {
+        "name": "Rabbit",
+        "location": "Bluebell Hollow",
+        "minLevel": 1,
+        "exp": 15,
+        "drop": "Lucky Rabbit Foot"
+      },
+      {
+        "name": "Goblin",
+        "location": "Bluebell Hollow",
+        "minLevel": 2,
+        "exp": 18,
+        "drop": ["Goblin Pouch", "Goblin Scraps", "Goblin Totem"]
+      },
+      {
+        "name": "Duck",
+        "location": "Bluebell Hollow",
+        "minLevel": 4,
+        "exp": 21,
+        "drop": "Duck Mouth"
+      },
+      {
+        "name": "Goblin King",
+        "location": "Bluebell Hollow",
+        "minLevel": 6,
+        "exp": 25,
+        "drop": ["Goblin Crown", "Goblin Pouch", "Goblin Scraps", "Goblin Totem"]
+      },
+      {
+        "name": "Boar",
+        "location": "Whispering Woods",
+        "minLevel": 8,
+        "exp": 30,
+        "drop": "Boar Tusk"
+      },
+      {
+        "name": "Deer",
+        "location": "Whispering Woods",
+        "minLevel": 10,
+        "exp": 34,
+        "drop": "Deer Antler"
+      },
+      {
+        "name": "Cultist",
+        "location": "Whispering Woods",
+        "minLevel": 12,
+        "exp": 38,
+        "drop": ["Essence of Shadows", "Cursed Talisman", "Forbidden Tome", "Ruined Robes"]
+      },
+      {
+        "name": "Gorgon",
+        "location": "Whispering Woods",
+        "minLevel": 14,
+        "exp": 44,
+        "drop": ["Snakes Head", "Venom Extract"]
+      },
+      {
+        "name": "Djinn",
+        "location": "Whispering Woods",
+        "minLevel": 16,
+        "exp": 50,
+        "drop": "Djinn's Bottle"
+      },
+      {
+        "name": "Spectre",
+        "location": "Eldoria",
+        "minLevel": 18,
+        "exp": 55,
+        "drop": "Vial of Spectre Ectoplasm"
+      },
+      {
+        "name": "Ogre",
+        "location": "Eldoria",
+        "minLevel": 20,
+        "exp": 62,
+        "drop": ["Raw Onion", "Swamp Juice"]
+      },
+      {
+        "name": "Buffalo",
+        "location": "Eldoria",
+        "minLevel": 22,
+        "exp": 68,
+        "drop": "Buffalo Horn"
+      },
+      {
+        "name": "Slimeball",
+        "location": "Eldoria",
+        "minLevel": 24,
+        "exp": 74,
+        "drop": "Slime Extract"
+      },
+      {
+        "name": "Pirate",
+        "location": "Eldoria",
+        "minLevel": 26,
+        "exp": 82,
+        "drop": ["Chest of Scraps", "Parchment", "Pirates Code"]
+      },
+      {
+        "name": "Skeleton Warrior",
+        "location": "Eldoria",
+        "minLevel": 28,
+        "exp": 93,
+        "drop": "Bone Fragment"
+      },
+      {
+        "name": "Zombie",
+        "location": "Crystal Caverns",
+        "minLevel": 32,
+        "exp": 104,
+        "drop": "Long Forgotten Necklace"
+      },
+      {
+        "name": "Shadow Beast",
+        "location": "Crystal Caverns",
+        "minLevel": 35,
+        "exp": 115,
+        "drop": ["Abbysal Scroll", "Umbrat Claw"]
+      },
+      {
+        "name": "Elephant",
+        "location": "Crystal Caverns",
+        "minLevel": 36,
+        "exp": 128,
+        "drop": "ivory"
+      },
+      {
+        "name": "Elk",
+        "location": "Crystal Caverns",
+        "minLevel": 38,
+        "exp": 140,
+        "drop": "Elk Antler"
+      },
+      {
+        "name": "Siren",
+        "location": "Crystal Caverns",
+        "minLevel": 42,
+        "exp": 160,
+        "drop": ["Siren's Scales", "Siren's Soulstone"]
+      },
+      {
+        "name": "Lion",
+        "location": "Skyreach Peak",
+        "minLevel": 48,
+        "exp": 180,
+        "drop": "Lions Teeth"
+      },
+      {
+        "name": "Wraith",
+        "location": "Skyreach Peak",
+        "minLevel": 52,
+        "exp": 195,
+        "drop": "Vial of Wraith Ectoplasm"
+      },
+      {
+        "name": "Moose",
+        "location": "Skyreach Peak",
+        "minLevel": 54,
+        "exp": 210,
+        "drop": "Moose Antler"
+      },
+      {
+        "name": "Golem",
+        "location": "Skyreach Peak",
+        "minLevel": 58,
+        "exp": 230,
+        "drop": ["Enigmatic Stone", "Golem Core Fragment", "Stoneheart Core"]
+      },
+      {
+        "name": "Polar Bear",
+        "location": "Enchanted Oasis",
+        "minLevel": 60,
+        "exp": 255,
+        "drop": "Polar Bear Pelt"
+      },
+      {
+        "name": "Witch",
+        "location": "Enchanted Oasis",
+        "minLevel": 62,
+        "exp": 280,
+        "drop": ["Grimoire of Shadows", "Void Essence"]
+      },
+      {
+        "name": "Raccoon",
+        "location": "Enchanted Oasis",
+        "minLevel": 64,
+        "exp": 295,
+        "drop": "Raccoon Fur"
+      },
+      {
+        "name": "Dwarven Warrior",
+        "location": "Enchanted Oasis",
+        "minLevel": 68,
+        "exp": 320,
+        "drop": ["Broken Dwarfen Plate", "Dwarven Whetstone"]
+      },
+      {
+        "name": "Wolf",
+        "location": "Enchanted Oasis",
+        "minLevel": 69,
+        "exp": 340,
+        "drop": "Wolf Pelt"
+      },
+      {
+        "name": "Black Bear",
+        "location": "Floating Gardens of Aetheria",
+        "minLevel": 70,
+        "exp": 370,
+        "drop": "Black Bear Pelt"
+      },
+      {
+        "name": "Minotaur",
+        "location": "Floating Gardens of Aetheria",
+        "minLevel": 72,
+        "exp": 400,
+        "drop": ["Minotaur Hide", "Minotaur Horn"]
+      },
+      {
+        "name": "Reaper",
+        "location": "Floating Gardens of Aetheria",
+        "minLevel": 74,
+        "exp": 440,
+        "drop": "Cursed Cloth"
+      },
+      {
+        "name": "Harpy",
+        "location": "Floating Gardens of Aetheria",
+        "minLevel": 76,
+        "exp": 480,
+        "drop": "Harpy's Wing"
+      },
+      {
+        "name": "Undead Knight",
+        "location": "Celestial Observatory",
+        "minLevel": 78,
+        "exp": 550,
+        "drop": ["Cursed Blade FRagment", "Undying Crest"]
+      },
+      {
+        "name": "Wizard of the South",
+        "location": "Celestial Observatory",
+        "minLevel": 82,
+        "exp": 590,
+        "drop": ["Arcane Starstone", "Orb of Elemental Conjuring", "Ruined Robes"]
+      },
+      {
+        "name": "Air Elemental",
+        "location": "Celestial Observatory",
+        "minLevel": 84,
+        "exp": 620,
+        "drop": "Air Elemental Essence"
+      },
+      {
+        "name": "Water Elemental",
+        "location": "Celestial Observatory",
+        "minLevel": 86,
+        "exp": 640,
+        "drop": ["Oceanic Essence", "Water Elemental Essence"]
+      },
+      {
+        "name": "Fire Elemental",
+        "location": "Celestial Observatory",
+        "minLevel": 89,
+        "exp": 690,
+        "drop": "Fire Elemental Essence"
+      },
+      {
+        "name": "Basilisk",
+        "location": "Isle of Whispers",
+        "minLevel": 92,
+        "exp": 720,
+        "drop": ["Basilisk Venom Vial", "Petrifying Gaze Crystal"]
+      },
+      {
+        "name": "Griffon",
+        "location": "Isle of Whispers",
+        "minLevel": 94,
+        "exp": 780
+      },
+      {
+        "name": "Earth Elemental",
+        "location": "Isle of Whispers",
+        "minLevel": 98,
+        "exp": 840,
+        "drop": ["Aetherial Feather Quill", "Earth Elemental Essence"]
+      },
+      {
+        "name": "Werewolf",
+        "location": "Isle of Whispers",
+        "minLevel": 99,
+        "exp": 950,
+        "drop": ["Claw of the Alpha", "Moonblood Tincture"]
+      },
+      {
+        "name": "There is no mob yet",
+        "location": "The Citadel",
+        "minLevel": 0,
+        "exp": 0,
+        "drop": "unknown"
+      }
+    ],
+    "locations": [
+    { "name": "Bluebell Hollow", "level": 1 },
+    { "name": "Whispering Woods", "level": 10 },
+    { "name": "Eldoria", "level": 20 },
+    { "name": "Crystal Caverns", "level": 33 },
+    { "name": "Skyreach Peak", "level": 50 },
+    { "name": "Enchanted Oasis", "level": 60 },
+    { "name": "Floating Gardens of Aetheria", "level": 72 },
+    { "name": "Celestial Observatory", "level": 80 },
+    { "name": "Isle of Whispers", "level": 92 },
+    { "name": "The Citadel", "level": 93 }
+  ]
+}

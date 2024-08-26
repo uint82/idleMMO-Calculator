@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Forge.css';
 import skillData from '../data/Artisan_skill.json';
 import expData from '../data/Exp.json';
@@ -7,6 +7,9 @@ const Forge = () => {
   const [currentLevel, setCurrentLevel] = useState('');
   const [currentPercentage, setCurrentPercentage] = useState('');
   const [targetLevel, setTargetLevel] = useState('');
+  const [currentSTRLevel, setCurrentSTRLevel] = useState('');
+  const [currentSTRPercentage, setCurrentSTRPercentage] = useState('');
+  const [targetSTRLevel, setTargetSTRLevel] = useState('');
   const [result, setResult] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
   const [forgeItems, setForgeItems] = useState([]);
@@ -83,44 +86,68 @@ const Forge = () => {
     if (t1Bonus) expBonus += 0.15;
     if (t2Bonus) expBonus += 0.20;
     if (t3Bonus) expBonus += 0.30;
+
+    switch (buff) {
+      case 'herculean': expBonus += 0.10; break;
+      case 'titan': expBonus += 0.20; break;
+      case 'ironclad': expBonus += 0.30; break;
+      case 'unyielding': expBonus += 0.40; break;
+      default: break; 
+    }
   
     return expBonus;
   };
 
-  const handleCalculate = (selectedItem) => {
+  const handleCalculate = useCallback((selectedItem) => {
     const item = forgeItems.find(i => i.name === selectedItem);
-    if (item && parseInt(currentLevel) >= item.minLevel) {
-      const currentLvl = parseInt(currentLevel);
-      const targetLvl = parseInt(targetLevel);
+    if (item && (parseInt(currentLevel) >= item.minLevel || currentSTRLevel)) {
+      const currentLvl = parseInt(currentLevel) || 1;
+      const targetLvl = parseInt(targetLevel) || currentLvl;
+      const currentSTRLvl = parseInt(currentSTRLevel) || 1;
+      const targetSTRLvl = parseInt(targetSTRLevel) || currentSTRLvl;
       
       const currentLevelExp = parseInt(expData[currentLvl]);
       const nextLevelExp = parseInt(expData[currentLvl + 1]);
       const percentage = currentPercentage === '' ? 0 : parseFloat(currentPercentage);
       const currentExp = currentLevelExp + ((nextLevelExp - currentLevelExp) * percentage / 100);
       
+      const currentSTRLevelExp = parseInt(expData[currentSTRLvl]);
+      const nextSTRLevelExp = parseInt(expData[currentSTRLvl + 1]);
+      const strPercentage = currentSTRPercentage === '' ? 0 : parseFloat(currentSTRPercentage);
+      const currentSTRExp = currentSTRLevelExp + ((nextSTRLevelExp - currentSTRLevelExp) * strPercentage / 100);
+      
       const targetExp = parseInt(expData[targetLvl]);
+      const targetSTRExp = parseInt(expData[targetSTRLvl]);
       const expNeeded = targetExp - currentExp;
+      const strExpNeeded = targetSTRExp - currentSTRExp;
       
       let baseItemExp = item.exp;
       let waitLength = item.wait_length;
       let baseSTRExp = item.STRexp;
-
+  
       const forgeExpBonus = calculateForgeExpBonus();
       const strExpBonus = calculateSTRExpBonus();
-
-      const itemExp = Math.round(baseItemExp * forgeExpBonus);
-      const strExp = Math.round(baseSTRExp * strExpBonus);
-
+  
+      const itemExp = Math.round(baseItemExp * forgeExpBonus + 0.00000001);
+      const strExp = Math.round(baseSTRExp * strExpBonus + 0.00000001);
+  
       const finalWaitLength = applyEfficiency(waitLength);
       const totalEfficiency = calculateEfficiency();
-
+  
       const totalItems = Math.ceil(expNeeded / itemExp);
+      const totalSTRItems = Math.ceil(strExpNeeded / strExp);
       const totalSTRexp = totalItems * strExp;
       const totalTimeInSeconds = Math.round(totalItems * finalWaitLength);
+      const totalSTRTimeInSeconds = Math.round(totalSTRItems * finalWaitLength);
       
       const materials = Object.entries(item.Material).map(([name, quantity]) => ({
         name,
         quantity: parseInt(quantity) * totalItems
+      }));
+
+      const strMaterials = Object.entries(item.Material).map(([name, quantity]) => ({
+        name,
+        quantity: parseInt(quantity) * totalSTRItems
       }));
 
       setResult({
@@ -128,6 +155,9 @@ const Forge = () => {
         totalItems,
         totalSTRexp: Math.round(totalSTRexp),
         totalTimeInSeconds,
+        totalSTRExp: Math.round(strExpNeeded),
+        totalSTRItems,
+        totalSTRTimeInSeconds,
         selectedItem,
         isMember,
         playerClass,
@@ -139,15 +169,18 @@ const Forge = () => {
         strExpBonus: (strExpBonus - 1) * 100,
         forgeExpBonus: (forgeExpBonus - 1) * 100,
         totalEfficiency,
-        materials
+        showForge: currentLevel !== '' || targetLevel !== '',
+        showSTR: currentSTRLevel !== '' || targetSTRLevel !== '',
+        materials,
+        strMaterials,
       });
       setActiveItem(selectedItem);
     } else {
       setResult({
-        error: `You need to be at least level ${item.minLevel} to forge ${selectedItem}.`
+        error: `You need to be at least level ${item.minLevel} to forge ${selectedItem}, or input STR levels.`
       });
     }
-  };
+  }, [currentLevel, currentPercentage, targetLevel, currentSTRLevel, currentSTRPercentage, targetSTRLevel, isMember, playerClass, buff, tool, t1Bonus, t2Bonus, t3Bonus, forgeItems]);
 
   useEffect(() => {
     if (activeItem) {
@@ -222,6 +255,46 @@ const Forge = () => {
             />
           </div>
         </div>
+        <h1>Strength</h1>
+        <div className="input-row">
+          <div className="input-group">
+            <label htmlFor="current-str-level">Current Lvl</label>
+            <input
+              id="current-str-level"
+              type="number"
+              value={currentSTRLevel}
+              onChange={handleInputChange(setCurrentSTRLevel)}
+              min="1"
+              max="100"
+            />
+          </div>
+          <div className="input-group percentage">
+            <label htmlFor="current-str-percentage">Current %</label>
+            <div className="percentage-input-wrapper">
+              <input
+                id="current-str-percentage"
+                type="number"
+                value={currentSTRPercentage}
+                onChange={handleInputChange(setCurrentSTRPercentage)}
+                min="0"
+                max="99"
+              />
+              <span className="percentage-symbol">%</span>
+            </div>
+          </div>
+          <div className="arrow">→</div>
+          <div className="input-group">
+            <label htmlFor="target-str-level">Target lvl</label>
+            <input
+              id="target-str-level"
+              type="number"
+              value={targetSTRLevel}
+              onChange={handleInputChange(setTargetSTRLevel)}
+              min="2"
+              max="100"
+            />
+          </div>
+        </div>
         <div className="options-group">
           <div className="checkbox-group">
             <div className="checkbox-item">
@@ -282,9 +355,10 @@ const Forge = () => {
                 onChange={(e) => setBuff(e.target.value)}
               >
                 <option value="">No Buff</option>
-                <option value="forge">Forge</option>
-                <option value="molten">Molten</option>
-                <option value="tampering">Tampering</option>
+                <option value="herculean">Herculean</option>
+                <option value="titan">Titan Power</option>
+                <option value="ironclad">Ironclad</option>
+                <option value="unyielding">Unyielding</option>
               </select>
             </div>
           </div>
@@ -303,23 +377,47 @@ const Forge = () => {
           ))}
         </div>
         {result && !result.error && (
-        <div className="result">
-          <p>Total exp needed: {result.totalExp.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
-          <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
-          <p>Total STR exp gained: {result.totalSTRexp.toLocaleString()}</p>
-          <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
-          <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
-          <p className="exp-bonus">Total Forge exp bonus applied: {result.forgeExpBonus.toFixed(2)}%</p>
-          <p className="exp-bonus">Total STR exp bonus applied: {result.strExpBonus.toFixed(2)}%</p>
-          <p>XP per item: {result.itemExp}</p>
-          <p>STR exp per item: {result.strExp}</p>
-          <p>Wait time per item: {result.waitLength}s</p>
-          <h3>Materials needed:</h3>
-          {result.materials.map((material, index) => (
-            <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
-          ))}
-        </div>
-      )}
+          <div className="result">
+            {result.showForge && (
+              <>
+                <h3>Forge Results:</h3>
+                <p>Total exp needed: {result.totalExp.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
+                <p>Total {result.selectedItem}: {result.totalItems.toLocaleString()}</p>
+                <p>Total time needed: {formatTime(result.totalTimeInSeconds)}</p>
+              </>
+            )}
+            {result.showSTR && (
+              <>
+                <h3>Strength Results:</h3>
+                <p>Total STR exp needed: {result.totalSTRExp.toLocaleString(undefined, {maximumFractionDigits: 2})}</p>
+                <p>Total {result.selectedItem} for STR: {result.totalSTRItems.toLocaleString()}</p>
+                <p>Total time needed for STR: {formatTime(result.totalSTRTimeInSeconds)}</p>
+              </>
+            )}
+            <p className="total-efficiency">Total Efficiency applied: +{result.totalEfficiency}%</p>
+            <p className="exp-bonus">Total Forge exp bonus applied: {result.forgeExpBonus.toFixed(2)}%</p>
+            <p className="exp-bonus">Total STR exp bonus applied: {result.strExpBonus.toFixed(2)}%</p>
+            <p>XP per item: {result.itemExp}</p>
+            <p>STR exp per item: {result.strExp}</p>
+            <p>Wait time per item: {result.waitLength}s</p>
+            {result.showForge && (
+              <>
+                <h3>Materials needed for Forge:</h3>
+                {result.materials.map((material, index) => (
+                  <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
+                ))}
+              </>
+            )}
+            {result.showSTR && (
+              <>
+                <h3>Materials needed for Strength:</h3>
+                {result.strMaterials.map((material, index) => (
+                  <p key={index}>{material.name}: {material.quantity.toLocaleString()}</p>
+                ))}
+              </>
+            )}
+          </div>
+        )}
         {result && result.error && (
           <div className="result error">
             <p>{result.error}</p>

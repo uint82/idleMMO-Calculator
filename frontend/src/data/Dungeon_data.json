@@ -1,0 +1,148 @@
+{
+    "dungeons": [
+      {
+        "name": "Millstone Mines",
+        "location": "Bluebell Hollow",
+        "minLevel": 3,
+        "cost": 300,
+        "exp": 1200,
+        "wait_length": 900
+      },
+      {
+        "name": "Vineyard Labyrinth",
+        "location": "Bluebell Hollow",
+        "minLevel": 10,
+        "cost": 1200,
+        "exp": 1650,
+        "wait_length": 900
+      },
+      {
+        "name": "Verdant Veil",
+        "location": "Whispering Woods",
+        "minLevel": 25,
+        "cost": 2400,
+        "exp": 2000,
+        "wait_length": 900
+      },
+      {
+        "name": "Sylvan Sanctum",
+        "location": "Whispering Woods",
+        "minLevel": 40,
+        "cost": 3600,
+        "exp": 2400,
+        "wait_length": 900
+      },
+      {
+        "name": "Whispering Catacombs",
+        "location": "Whispering Woods",
+        "minLevel": 60,
+        "cost": 4800,
+        "exp": 3200,
+        "wait_length": 900
+      },
+      {
+        "name": "Cursed Asylum",
+        "location": "Eldoria",
+        "minLevel": 62,
+        "cost": 6000,
+        "exp": 6000,
+        "wait_length": 1275
+      },
+      {
+        "name": "Forgotten Archives",
+        "location": "Eldoria",
+        "minLevel": 65,
+        "cost": 9000,
+        "exp": 9200,
+        "wait_length": 1800
+      },
+      {
+        "name": "Crystal Forge",
+        "location": "Crystal Caverns",
+        "minLevel": 70,
+        "cost": 15000,
+        "exp": 13500,
+        "wait_length": 2310
+      },
+      {
+        "name": "Frostbite Spire",
+        "location": "Skyreach Peak",
+        "minLevel": 74,
+        "cost": 18000,
+        "exp": 18000,
+        "wait_length": 2880
+      },
+      {
+        "name": "Zenith's Sanctum",
+        "location": "Skyreach Peak",
+        "minLevel": 76,
+        "cost": 21000,
+        "exp": 23000,
+        "wait_length": 3510
+      },
+      {
+        "name": "Mirage Citadel",
+        "location": "Enchanted Oasis",
+        "minLevel": 78,
+        "cost": 24000,
+        "exp": 29000,
+        "wait_length": 4200
+      },
+      {
+        "name": "Eden's Embrace",
+        "location": "Floating Gardens of Aetheria",
+        "minLevel": 82,
+        "cost": 27000,
+        "exp": 37000,
+        "wait_length": 4950
+      },
+      {
+        "name": "Arboreal Labyrinth",
+        "location": "Floating Gardens of Aetheria",
+        "minLevel": 84,
+        "cost": 30000,
+        "exp": 47000,
+        "wait_length": 5760
+      },
+      {
+        "name": "Bloodmoon Manor",
+        "location": "Celestial Observatory",
+        "minLevel": 86,
+        "cost": 33000,
+        "exp": 58000,
+        "wait_length": 6630
+      },
+      {
+        "name": "Ruins of Old Ranhor",
+        "location": "Isle of Whispers",
+        "minLevel": 88,
+        "cost": 36000,
+        "exp": 70000,
+        "wait_length": 7560
+      },
+      {
+        "name": "Volcanic Depths",
+        "location": "Isle of Whispers",
+        "minLevel": 90,
+        "cost": 39000,
+        "exp": 82000,
+        "wait_length": 8550
+      },
+      {
+        "name": "Celestial Enclave",
+        "location": "The Citadel",
+        "minLevel": 92,
+        "cost": 42000,
+        "exp": 99000,
+        "wait_length": 9600
+      },
+      {
+        "name": "The Nexus",
+        "location": "The Citadel",
+        "minLevel": 95,
+        "cost": 45000,
+        "exp": 112000,
+        "wait_length": 10710
+      }
+    ]
+  }
